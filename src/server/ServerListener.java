@@ -2,6 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class ServerListener extends Thread {
 
@@ -16,7 +17,9 @@ public class ServerListener extends Thread {
 			
 			try {
 				System.out.println("Waiting for connection");
-				ss.accept();
+				Socket s = ss.accept();
+				ServerClientListener sl = new ServerClientListener(s, this);
+				sl.start();
 				System.out.println("Connected");
 			} catch (IOException e) {
 				e.printStackTrace();
