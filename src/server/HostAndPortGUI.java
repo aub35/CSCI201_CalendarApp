@@ -1,6 +1,7 @@
 package server;
 
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,11 +20,15 @@ public class HostAndPortGUI extends JFrame {
 	public HostAndPortGUI(){
 		super ("Host and Port GUI");
 		createGUI();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setVisible(true);
+
 	}
 	
 	private void createGUI(){
-		setSize(300, 300);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setSize(500, 300);
+		setLayout(new GridLayout(5, 1));
 		
 		descriptionLabel = new JLabel("Enter the host IP and the port number of the server");
 		add(descriptionLabel);
@@ -43,11 +48,18 @@ public class HostAndPortGUI extends JFrame {
 		portLabel = new JLabel("Port Number");
 		portPanel.add(portLabel);
 		portTextField = new JTextField();
+		portTextField.setText("3306");
 		portPanel.add(portTextField);
 		add(portPanel);
 		
 		connectButton = new JButton("Connect");
 		add(connectButton);
 		
+		errorLabel = new JLabel("error message here");
+		add(errorLabel);
+	}
+	
+	public static void main (String [] args){
+		new HostAndPortGUI();
 	}
 }
