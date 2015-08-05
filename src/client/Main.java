@@ -12,8 +12,9 @@ public class Main {
 	}
 	
 	public static void main (String[] args) {
-//		new Client("localhost", 8080);
-		Main[] m = new Main[3];
+		Client c = new Client("localhost", 8080);
+		c.start();
+/*		Main[] m = new Main[3];
 		m[0] = new Main(30);
 		m[1] = new Main(50);
 		m[2] = new Main(10);
@@ -21,7 +22,7 @@ public class Main {
 		
 		for (int i = 0; i < 3; i++) {
 			System.out.println(m[i].num);
-		}
+		}*/
 	}
 }
 

@@ -7,9 +7,11 @@ import java.net.Socket;
 public class ServerListener extends Thread {
 
 	private ServerSocket ss;
+	private Server server;
 	
-	public ServerListener(ServerSocket ss) {
+	public ServerListener(ServerSocket ss, Server server) {
 		this.ss =ss;
+		this.server = server;
 	}
 	
 	public void run() {
@@ -18,7 +20,7 @@ public class ServerListener extends Thread {
 			try {
 				System.out.println("Waiting for connection");
 				Socket s = ss.accept();
-				ServerClientListener sl = new ServerClientListener(s, this);
+				ServerClientListener sl = new ServerClientListener(s, server);
 				sl.start();
 				System.out.println("Connected");
 			} catch (IOException e) {

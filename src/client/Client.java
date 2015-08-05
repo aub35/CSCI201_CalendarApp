@@ -22,14 +22,17 @@ public class Client extends Thread {
 			outputStream = new PrintWriter(s.getOutputStream());
 			InputStreamReader isr = new InputStreamReader(s.getInputStream());
 			inputStream = new BufferedReader(isr);
-			checkUser();
+//			checkUser();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void run() {
-		
+		ReceiveData rd = new ReceiveData(inputStream, this);
+		rd.start();
+		SendData sd = new SendData(outputStream, this);
+		sd.start();
 	}
 	
 	private void checkUser() {
