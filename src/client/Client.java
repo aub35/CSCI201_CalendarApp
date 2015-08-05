@@ -9,7 +9,7 @@ import java.net.Socket;
 //protocol should be to send username, password & check if there is a matching one in server database
 //TODO: login screen GUI
 
-public class Client {
+public class Client extends Thread {
 
 	private Socket s;
 	private PrintWriter outputStream;
@@ -26,6 +26,10 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void run() {
+		
 	}
 	
 	private void checkUser() {

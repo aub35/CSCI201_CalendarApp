@@ -58,8 +58,4 @@ public class HostAndPortGUI extends JFrame {
 		errorLabel = new JLabel("error message here");
 		add(errorLabel);
 	}
-	
-	public static void main (String [] args){
-		new HostAndPortGUI();
-	}
 }

@@ -9,4 +9,12 @@ public class Calendar {
 	public Calendar() {
 
 	}
+	
+	public void addEvent(Event e, int index) {
+		events.add(index, e);
+	}
+	
+	public int getLength() {
+		return events.size();
+	}
 }
