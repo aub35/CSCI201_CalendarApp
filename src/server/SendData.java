@@ -1,14 +1,15 @@
 package server;
 
-import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 public class SendData extends Thread {
 
-	private PrintWriter outputStream;
+	private ObjectOutputStream outputStream;
 	private Server server;
 	
-	SendData(PrintWriter outputStream, Server server) {
+	SendData(ObjectOutputStream outputStream, Server server) {
 		this.outputStream = outputStream;
 		this.server = server;
 	}
@@ -18,9 +19,15 @@ public class SendData extends Thread {
 		String s;
 		while (true) {
 			s = scan.nextLine();
-			outputStream.println(s);
-			outputStream.flush();
-			if (s.equals("QUIT")) { break; }
+			try {
+				outputStream.writeObject(s);
+				outputStream.flush();
+				if (s.equals("QUIT")) { break; }
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 		scan.close();
 	}

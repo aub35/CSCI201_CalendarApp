@@ -1,11 +1,16 @@
 package calendar;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
-public class Calendar {
+public class Calendar implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Vector<Event> events;
 	
 	public Calendar() {

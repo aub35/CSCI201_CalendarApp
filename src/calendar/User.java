@@ -1,9 +1,14 @@
 package calendar;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class User {
+public class User implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String username, password, name;
 	private boolean isGuest;
 	private Vector<User> friends;

@@ -11,16 +11,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class LoginWindow extends JDialog {
-	JLabel usernameLabel, passwordLabel, errorLabel;
-	JTextField usernameTextField, passwordTextField;
-	JPanel usernamePanel, passwordPanel, buttonPanel, errorPanel;
+
+	private static final long serialVersionUID = 1L;
+	JLabel usernameLabel, passwordLabel, errorLabel, nameLabel;
+	JTextField usernameTextField, passwordTextField, nameTextField;
+	JPanel usernamePanel, passwordPanel, buttonPanel, errorPanel, namePanel;
 	JButton loginButton, createUserButton, guestLoginButton;
 	
+	private Client c;
 	
-	public LoginWindow(){
+	public LoginWindow(Client c){
 		createGUI();
 		addActionAdapters();
 		setVisible(true);
+		this.c = c;
 	}
 	
 	private void createGUI(){
@@ -45,6 +49,14 @@ public class LoginWindow extends JDialog {
 		passwordPanel.add(passwordTextField);
 		add(passwordPanel);
 		
+		namePanel = new JPanel();
+		nameLabel = new JLabel("Name: ");
+		namePanel.add(nameLabel);
+		nameTextField = new JTextField();
+		nameTextField.setColumns(10);
+		namePanel.add(nameTextField);
+		add(namePanel);
+		
 		buttonPanel = new JPanel();
 		loginButton = new JButton("Log In");
 		buttonPanel.add(loginButton);
@@ -61,10 +73,18 @@ public class LoginWindow extends JDialog {
 	}
 	
 	public void addActionAdapters(){
-
+		loginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				c.checkUser(usernameTextField.getText(), passwordTextField.getText());
+			}
+		});
+		
+		createUserButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				c.addUser(usernameTextField.getText(), passwordTextField.getText(), 
+						nameTextField.getText());
+			}
+		});
 	}
 	
-	public static void main (String[] args){
-		new LoginWindow();
-	}
 }

@@ -12,8 +12,7 @@ public class Main {
 	}
 	
 	public static void main (String[] args) {
-		Client c = new Client("localhost", 8080);
-		c.start();
+		new ClientPortGUI();
 /*		Main[] m = new Main[3];
 		m[0] = new Main(30);
 		m[1] = new Main(50);

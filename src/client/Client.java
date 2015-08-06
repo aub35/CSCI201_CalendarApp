@@ -1,63 +1,91 @@
 package client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import resources.AddUser;
+import resources.CheckUser;
 
 //protocol should be to send username, password & check if there is a matching one in server database
 //TODO: login screen GUI
+//log out
 
 public class Client extends Thread {
 
 	private Socket s;
-	private PrintWriter outputStream;
-	private BufferedReader inputStream;
+	private ObjectOutputStream outputStream;
+	private ObjectInputStream inputStream;
+	private ReceiveData rd;
 	
+	private boolean haveReceivedLogin, haveReceivedUser = false;
 	
 	public Client(String hostname, int port) {
 		try {
 			s = new Socket(hostname, port);
-			outputStream = new PrintWriter(s.getOutputStream());
-			InputStreamReader isr = new InputStreamReader(s.getInputStream());
-			inputStream = new BufferedReader(isr);
-//			checkUser();
+			outputStream = new ObjectOutputStream(s.getOutputStream());
+			inputStream = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public void setHaveReceivedLogin(boolean haveReceivedLogin) {
+		this.haveReceivedLogin = haveReceivedLogin;
+	}
+
+	public void setHaveReceivedUser(boolean haveReceivedUser) {
+		this.haveReceivedUser = haveReceivedUser;
+	}
+
+
 	public void run() {
-		ReceiveData rd = new ReceiveData(inputStream, this);
+		rd = new ReceiveData(inputStream, this);
 		rd.start();
-		SendData sd = new SendData(outputStream, this);
-		sd.start();
 	}
 	
-	private void checkUser() {
-		sendInformation();
-		if (receiveInformation()) {
-			System.out.println("User exists");
-		} else {
-			System.out.println("User does not exist");
-		}
-	}
-	
-	private void sendInformation() {
-		String username = "user";
-		String password = "password";
-		outputStream.println(username);
-		outputStream.println(password);
-		outputStream.flush();
-	}
-	
-	private boolean receiveInformation() {
+	public void checkUser(String username, String password) {
 		try {
-			return Boolean.parseBoolean(inputStream.readLine());
+			outputStream.writeObject(new CheckUser(username, password));
+			outputStream.flush();
+			while (!haveReceivedLogin) { 
+				Thread.sleep(100);
+			}
+			System.out.println("Received CheckUser from server");
+			CheckUser checkuser = rd.checkuser;
+			if (checkuser.doesExist()) {
+				System.out.println("Successful login");
+			} else {
+				System.out.println("Unsuccessful login");
+			}
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("Failed to receive information");
-			return false;
+			e.printStackTrace();
 		}
 	}
+	
+	public void addUser(String username, String password, String name) {
+		try {
+			outputStream.writeObject(new AddUser(username, password, name, null));
+			outputStream.flush();
+			while (!haveReceivedUser) {
+				Thread.sleep(100);
+			}
+			AddUser au = rd.adduser;
+			if (au.isSuccessfulAdd()) {
+				System.out.println("Have successfully created User");
+				System.out.println("This user: " + au.getUser());
+			} else {
+				System.out.println("Did not create user");
+			}
+			haveReceivedUser = false;
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

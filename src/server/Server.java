@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import calendar.User;
+import resources.AddUser;
+import resources.CheckUser;
 import calendar.Calendar;
 import calendar.Date;
 import calendar.Event;
@@ -38,9 +40,36 @@ public class Server {
 		}
 	}
 	
-	public void addUser(User u) {
-		Calendar c = new Calendar();
-		userMap.put(u, c);
+	public void checkUser(CheckUser cu) {
+		String username = cu.getUsername();
+		String password = cu.getPassword();
+		for (User key : userMap.keySet()) {
+			String keyUsername = key.getUsername();
+			String keyPassword = key.getPassword();
+			if (username.equals(keyUsername)) {
+				if (password.equals(keyPassword)) {
+					cu.setDoesExist(true);
+					return;
+				} else {
+					cu.setDoesExist(false);
+					return;
+				}
+			}
+		}
+	}
+	
+	public void addUser(AddUser au) {
+		String username = au.getUsername();
+		for (User key : userMap.keySet()) {
+			if (username.equals(key.getUsername())) {
+				au.setSuccessfulAdd(false);
+				return;
+			}
+		}
+		User u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
+		userMap.put(u, new Calendar());
+		au.setSuccessfulAdd(true);
+		au.setUser(u);
 	}
 	
 	public Date currentTime() {

@@ -50,7 +50,7 @@ public class ClientPortGUI extends JFrame {
 		portLabel = new JLabel("Port Number");
 		portPanel.add(portLabel);
 		portTextField = new JTextField();
-		portTextField.setText("3306");
+		portTextField.setText("8080");
 		portPanel.add(portTextField);
 		add(portPanel);
 		
@@ -66,7 +66,9 @@ public class ClientPortGUI extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				int port = Integer.parseInt(portTextField.getText());
-				new Client("localhost", port);
+				Client c = new Client("localhost", port);
+				c.start();
+				new LoginWindow(c);
 			}
 		});
 	}

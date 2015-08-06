@@ -50,7 +50,7 @@ public class HostAndPortGUI extends JFrame {
 		portLabel = new JLabel("Port Number");
 		portPanel.add(portLabel);
 		portTextField = new JTextField();
-		portTextField.setText("3306");
+		portTextField.setText("8080");
 		portPanel.add(portTextField);
 		add(portPanel);
 		
