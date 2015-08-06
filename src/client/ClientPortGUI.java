@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class HostAndPortGUI extends JFrame {
+public class ClientPortGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel descriptionLabel, hostLabel, portLabel, errorLabel;
@@ -18,8 +18,8 @@ public class HostAndPortGUI extends JFrame {
 	private JButton connectButton;
 	JPanel hostPanel, portPanel;
 	
-	public HostAndPortGUI(){
-		super ("Host and Port GUI");
+	public ClientPortGUI(){
+		super ("Client Port GUI");
 		createGUI();
 		addEventHandlers();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,8 +66,9 @@ public class HostAndPortGUI extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				int port = Integer.parseInt(portTextField.getText());
-				new Server(port);
+				new Client("localhost", port);
 			}
 		});
 	}
 }
+

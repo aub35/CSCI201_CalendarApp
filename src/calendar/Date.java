@@ -6,6 +6,13 @@ public class Date {
 	private int minute, hour, dayOfMonth, dayOfWeek, month, year;
 	private boolean isAm;
 	
+	public static boolean isSameDay(Date d1, Date d2) {
+		if (d1.getYear() != d2.getYear()) { return false; }
+		else if (d1.getMonth() != d2.getMonth()) { return false; }
+		else if (d1.getDayOfMonth() != d2.getDayOfMonth()) { return false; }
+		return true;
+	}
+	
 	public int getMinute() {
 		return minute;
 	}
@@ -51,5 +58,11 @@ public class Date {
 			return false;
 		}
 		return true;
+	}
+	
+	public String toString() {
+		String str = month + "/" + dayOfMonth + "/" + year;
+		str += "\n" + hour + ":" + minute;
+		return str;
 	}
 }
