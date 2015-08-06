@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class AddEventWindow extends JDialog {
+
+	private static final long serialVersionUID = 1L;
 	JLabel nameLabel, dateLabel, startTimeLabel, endTimeLabel, locationLabel;
 	JButton addEventButton;
 	JTextField nameTextField, dateTextField, startTimeTextField, endTimeTextField, locationTextField;

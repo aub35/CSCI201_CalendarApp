@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -68,8 +66,18 @@ public class Server {
 	public void addEvent(User u, Event e) {
 		Calendar value = userMap.get(u);
 		if (value != null) {
-			return;
+			value.addEvent(e);
 		}
+	}
+	
+	//MAKE SURE DATE INCLUDES THE LATEST TIME IN THE DAY
+	public Vector<Event> getDayEvent(User u, Date date) {
+		Vector<Event> result = new Vector<Event>();
+		Calendar value = userMap.get(u);
+		if (value != null && value.getLength() != 0) {
+			//value
+		}
+		return result;
 	}
 	
 }
