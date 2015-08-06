@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class AddEventWindow extends JDialog {
-	JLabel nameLabel, dateLabel, startTimeLabel, endTimeLabel, locationLabel;
+	JLabel nameLabel, dateLabel, startTimeLabel, endTimeLabel, locationLabel, errorLabel;
 	JButton addEventButton;
 	JTextField nameTextField, dateTextField, startTimeTextField, endTimeTextField, locationTextField;
 	JPanel namePanel, datePanel, startTimePanel, endTimePanel, locationPanel;
@@ -18,13 +18,14 @@ public class AddEventWindow extends JDialog {
 	public AddEventWindow(){
 		setModal(true);
 		createGUI();
+		addActionAdapters();
 		setVisible(true);
 	}
 	public void createGUI(){
 		setTitle("Add Event Window");
 		setSize(400, 300);
 		
-		setLayout(new GridLayout(5, 1));
+		setLayout(new GridLayout(6, 1));
 		
 		
 		namePanel = new JPanel();
@@ -62,7 +63,12 @@ public class AddEventWindow extends JDialog {
 		addEventButton = new JButton("Add");
 		add(addEventButton);
 		
-		
+		errorLabel = new JLabel();
+		add(errorLabel);
+	}
+	
+	public void addActionAdapters(){
 		
 	}
+
 }
