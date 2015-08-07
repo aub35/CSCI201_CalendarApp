@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import calendar.Event;
 
 public class MainWindow extends JFrame {
 	JButton addEventButton;
@@ -32,7 +35,7 @@ public class MainWindow extends JFrame {
 		setSize(500, 500);
 	}
 	
-	public void createGUI(){
+	private void createGUI(){
 		
 		//centerPanel
 		centerPanel = new JPanel();
@@ -51,15 +54,21 @@ public class MainWindow extends JFrame {
 			JLabel label = new JLabel(i+":00");
 			gbc.gridx = 0;
 			gbc.gridy = i;
+			gbc.weightx =  1;
+			//gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.anchor = GridBagConstraints.CENTER;
 			hourLabels[i] = label;
 			dayPanel.add(label, gbc);
 		}
 		
 		for (int i=0; i<24; i++){
 			JLabel label = new JLabel("...");
-			gbc.gridx = 2;
+			label.setOpaque(true);
+			gbc.gridx = 1;
+			gbc.weightx =  4;
 			gbc.gridy = i;
 			gbc.gridwidth = 5;
+			gbc.fill = GridBagConstraints.HORIZONTAL;
 			eventLabels[i] = label;
 			dayPanel.add(label, gbc);
 		}
@@ -88,7 +97,7 @@ public class MainWindow extends JFrame {
 		add(rightPanel, BorderLayout.EAST);
 	}
 	
-	public void addActionAdapters(){
+	private void addActionAdapters(){
 		addEventButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
@@ -99,8 +108,18 @@ public class MainWindow extends JFrame {
 	}
 	
 	
+	public void displayEvent(int start, int end){
+		//int start  = e.getStart().getHour();
+		//int end = e.getEnd().getHour();
+		for (int i=start; i<end; i++){
+			eventLabels[i].setBackground(Color.cyan);
+		}
+		
+	}
+	
 	
 	public static void main (String[] args){
-		new MainWindow();
+		MainWindow mainWindow = new MainWindow();
+		mainWindow.displayEvent(3, 11);
 	}
 }
