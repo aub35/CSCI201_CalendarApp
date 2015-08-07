@@ -47,7 +47,7 @@ public class ReceiveData extends Thread {
 		if (obj instanceof AddUser) {
 			client.setHaveReceivedUser(true);
 			System.out.println("Client received user");
-			adduser = (AddUser)obj;
+			adduser = (AddUser)obj;  
 		}
 	}
 }

@@ -52,7 +52,6 @@ public class Client extends Thread {
 			while (!haveReceivedLogin) { 
 				Thread.sleep(100);
 			}
-			System.out.println("Received CheckUser from server");
 			CheckUser checkuser = rd.checkuser;
 			if (checkuser.doesExist()) {
 				System.out.println("Successful login");
@@ -76,7 +75,6 @@ public class Client extends Thread {
 			AddUser au = rd.adduser;
 			if (au.isSuccessfulAdd()) {
 				System.out.println("Have successfully created User");
-				System.out.println("This user: " + au.getUser());
 			} else {
 				System.out.println("Did not create user");
 			}
