@@ -55,19 +55,18 @@ public class MainWindow extends JFrame {
 			gbc.gridx = 0;
 			gbc.gridy = i;
 			gbc.weightx =  1;
-			//gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.anchor = GridBagConstraints.CENTER;
 			hourLabels[i] = label;
 			dayPanel.add(label, gbc);
 		}
 		
 		for (int i=0; i<24; i++){
-			JLabel label = new JLabel("...");
+			JLabel label = new JLabel(" ");
 			label.setOpaque(true);
 			gbc.gridx = 1;
-			gbc.weightx =  4;
+			gbc.weightx =  3;
 			gbc.gridy = i;
-			gbc.gridwidth = 5;
+			gbc.gridwidth = 3;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			eventLabels[i] = label;
 			dayPanel.add(label, gbc);
