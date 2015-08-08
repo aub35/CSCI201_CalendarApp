@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import calendar.Date;
 import calendar.Event;
 
 public class MainWindow extends JFrame {
@@ -116,9 +117,21 @@ public class MainWindow extends JFrame {
 		
 	}
 	
+	public void displayEvent(Event e){
+		int start = e.getStart().getHour();
+		int end = e.getEnd().getHour();
+		String displayText = e.getName() + "  @" + e.getLocation();
+		eventLabels[start].setText(displayText);
+		for (int i=start; i<end; i++){
+			eventLabels[i].setBackground(Color.cyan);
+		}
+		
+	}
 	
 	public static void main (String[] args){
 		MainWindow mainWindow = new MainWindow();
 		mainWindow.displayEvent(3, 11);
+		Event e = new Event(new Date(0, 0 , 1, 1, 1, 2015, false), new Date(0, 2, 1, 1, 1, 2015, false), "meeting", "vkc", false);
+		mainWindow.displayEvent(e);
 	}
 }
