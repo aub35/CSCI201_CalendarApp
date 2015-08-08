@@ -32,6 +32,7 @@ public class Client extends Thread {
 	private boolean haveReceivedLogin, haveReceivedUser, haveReceivedAddEvent,
 	haveReceivedGetEvents = false;
 	private User user;
+	private Date currentDate;
 	
 	//constructor
 	public Client(String hostname, int port) {
@@ -81,8 +82,8 @@ public class Client extends Thread {
 			while (!haveReceivedLogin) { 
 				Thread.sleep(100);
 			}
+			Thread.sleep(100);
 			CheckUser checkuser = rd.checkuser;
-			rd.checkuser = null;
 			if (checkuser.doesExist()) {
 				user = checkuser.getUser();
 				login();
@@ -94,6 +95,9 @@ public class Client extends Thread {
 			ie.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			rd.checkuser = null;
+			haveReceivedLogin = false;
 		}
 	}
 	
@@ -109,19 +113,21 @@ public class Client extends Thread {
 			while (!haveReceivedUser) {
 				Thread.sleep(100);
 			}
+			Thread.sleep(100);
 			AddUser au = rd.adduser;
-			rd.adduser = null;
 			if (au.isSuccessfulAdd()) {
 				user = au.getUser();
 				login();
 			} else {
 				System.out.println("Did not create user");
 			}
-			haveReceivedUser = false;
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			haveReceivedUser = false;
+			rd.adduser = null;
 		}
 	}
 	
@@ -136,10 +142,9 @@ public class Client extends Thread {
 			}
 			Thread.sleep(100);
 			AddEvent ae = rd.addevent;
-			rd.addevent = null;
 			if (ae.isSuccessfulAdd()) {
 				System.out.println("Successfully added event");
-				mainwindow.displayEvent(ae.getE());
+				getDaysEvents(currentDate);
 			} else {
 				System.out.println("Unsuccessful add");
 			}
@@ -147,6 +152,9 @@ public class Client extends Thread {
 			e1.printStackTrace();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
+		} finally {
+			rd.addevent = null;
+			haveReceivedAddEvent = false;
 		}
 	}
 	
@@ -158,8 +166,8 @@ public class Client extends Thread {
 			while (!haveReceivedGetEvents) {
 				Thread.sleep(100);
 			}
+			Thread.sleep(100);
 			GetEvents ge = rd.getevents;
-			rd.getevents = null;
 			if (ge.isSuccessfulGet()) {
 				Vector<Event> events = ge.getEvents();
 				System.out.println("Successfully got events"); 
@@ -173,13 +181,17 @@ public class Client extends Thread {
 			e.printStackTrace();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
+		} finally {
+			rd.getevents = null;
+			haveReceivedGetEvents = false;
 		}
 	}
 	
 	public void login() {
 		closeLoginWindow();
 		openMainWindow();
-		getDaysEvents(Date.getTodaysDate());
+		currentDate = Date.getTodaysDate();
+		getDaysEvents(currentDate);
 	}
 	
 	public void logout() {

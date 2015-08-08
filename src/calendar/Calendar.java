@@ -39,10 +39,14 @@ public class Calendar implements Serializable {
 		Date before = events.elementAt(index).getStart();
 		while (dc.compare(before, date) < 0) {
 			index++;
+			if (index >= events.size()) { break; }
 			before = events.elementAt(index).getStart();
 		}
-		if (Date.isSameDay(before, date)) {
+		while (Date.isSameDay(before, date)) {
 			result.add(events.elementAt(index));
+			index++;
+			if (index >= events.size()) { break; }
+			before = events.elementAt(index).getStart();
 		}
 		return result;
 	}

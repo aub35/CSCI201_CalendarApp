@@ -6,6 +6,7 @@ AddEventWindow :
 	illegally formatted events
 	format nicer
 MainWindow : 
+	add name to corner 
 	other modes
 	friends list
 	add upcoming events

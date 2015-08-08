@@ -90,7 +90,7 @@ public class LoginWindow extends JDialog {
 		guestLoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				c.setIsGuest(true);
-				c.addUser("Guest", passwordTextField.getText(), "Guest");
+				c.addUser(usernameTextField.getText(), passwordTextField.getText(), "Guest");
 			}
 		});
 	}

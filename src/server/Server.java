@@ -79,7 +79,6 @@ public class Server {
 		userMap.put(u, c);
 		au.setSuccessfulAdd(true);
 		au.setUser(u);
-		System.out.println("Server set user: " + u);
 	}
 	
 	public Date currentTime() {

@@ -21,7 +21,7 @@ import calendar.Event;
 
 public class MainWindow extends JFrame {
 	private Client c;
-	JButton addEventButton;
+	JButton addEventButton, logoutButton;
 	JPanel centerPanel, rightPanel, dayPanel;
 	JDialog EventWindow;
 	JScrollPane jsp;
@@ -93,19 +93,22 @@ public class MainWindow extends JFrame {
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		
 		addEventButton =new JButton("Add Event");
-		
 		rightPanel.add(addEventButton);
-
+		logoutButton = new JButton("Log out");
+		rightPanel.add(logoutButton);
 		add(rightPanel, BorderLayout.EAST);
 	}
 	
 	private void addActionAdapters(){
 		addEventButton.addActionListener(new ActionListener(){
-
 			public void actionPerformed(ActionEvent e) {
 				EventWindow = new AddEventWindow(c);				
 			}
-			
+		});
+		logoutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				c.logout();
+			}
 		});
 	}
 	
