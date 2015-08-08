@@ -75,14 +75,22 @@ public class LoginWindow extends JDialog {
 	public void addActionAdapters(){
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
+				c.setIsGuest(false);
 				c.checkUser(usernameTextField.getText(), passwordTextField.getText());
 			}
 		});
 		
 		createUserButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent ae) {
 				c.addUser(usernameTextField.getText(), passwordTextField.getText(), 
 						nameTextField.getText());
+			}
+		});
+		
+		guestLoginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				c.setIsGuest(true);
+				c.addUser("Guest", passwordTextField.getText(), "Guest");
 			}
 		});
 	}

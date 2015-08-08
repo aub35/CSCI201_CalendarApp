@@ -1,21 +1,35 @@
 package client;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import calendar.Date;
+import calendar.Event;
+
 public class AddEventWindow extends JDialog {
+
+	private static final long serialVersionUID = 1L;
 	JLabel nameLabel, dateLabel, startTimeLabel, endTimeLabel, locationLabel, errorLabel;
 	JButton addEventButton;
-	JTextField nameTextField, dateTextField, startTimeTextField, endTimeTextField, locationTextField;
-	JPanel namePanel, datePanel, startTimePanel, endTimePanel, locationPanel;
+	JTextField nameTextField, yearTextField, monthTextField, dayTextField, startTimeTextField, endTimeTextField, locationTextField;
+	JComboBox<Integer> startHourComboBox, startMinuteComboBox, endHourComboBox, endMinuteComboBox;
+	JPanel namePanel, datePanel, startTimePanel, endTimePanel, locationPanel, amPmPanel;
+	JRadioButton amButton, pmButton;
+	ButtonGroup bg;
+	private Client client;
 	
-	public AddEventWindow(){
+	public AddEventWindow(Client c){
+		this.client = c;
 		setModal(true);
 		createGUI();
 		addActionAdapters();
@@ -26,7 +40,7 @@ public class AddEventWindow extends JDialog {
 		setSize(400, 300);
 		
 		setLayout(new GridLayout(6, 1));
-		
+		initComboBoxes();
 		
 		namePanel = new JPanel();
 		nameLabel = new JLabel("Name");
@@ -39,26 +53,44 @@ public class AddEventWindow extends JDialog {
 		datePanel = new JPanel();
 		dateLabel = new JLabel("Date(YYYY-MM-DD): ");
 		datePanel.add(dateLabel);
-		dateTextField = new JTextField();
-		dateTextField.setColumns(10);
-		datePanel.add(dateTextField);
+		yearTextField = new JTextField();
+		yearTextField.setColumns(4);
+		datePanel.add(yearTextField);
+		datePanel.add(new JLabel(" - "));
+		monthTextField = new JTextField();
+		monthTextField.setColumns(2);
+		datePanel.add(monthTextField);
+		datePanel.add(new JLabel(" - "));
+		dayTextField = new JTextField();
+		dayTextField.setColumns(2);
+		datePanel.add(dayTextField);
 		add(datePanel);
 		
 		startTimePanel = new JPanel();
-		startTimeLabel = new JLabel("Event Start Time(HH:MM): ");
-		startTimeTextField = new JTextField();
-		startTimeTextField.setColumns(10);
+		startTimeLabel = new JLabel("Event Start Time ");
 		startTimePanel.add(startTimeLabel);
-		startTimePanel.add(startTimeTextField);
+		startTimePanel.add(startHourComboBox);
+		startTimePanel.add(new JLabel(" : "));
+		startTimePanel.add(startMinuteComboBox);
 		add(startTimePanel);
 		
 		endTimePanel = new JPanel();
-		endTimeLabel = new JLabel("Event End Time(HH:MM): ");
-		endTimeTextField = new JTextField();
-		endTimeTextField.setColumns(10);
+		endTimeLabel = new JLabel("Event End Time ");
 		endTimePanel.add(endTimeLabel);
-		endTimePanel.add(endTimeTextField);
+		endTimePanel.add(endHourComboBox);
+		endTimePanel.add(new JLabel(" : "));
+		endTimePanel.add(endMinuteComboBox);
 		add(endTimePanel);
+		
+		amPmPanel = new JPanel();
+		amButton = new JRadioButton("AM");
+		pmButton = new JRadioButton("PM");
+		bg = new ButtonGroup();
+		amPmPanel.add(amButton);
+		amPmPanel.add(pmButton);
+		bg.add(amButton);
+		bg.add(pmButton);
+		add(amPmPanel);
 		
 		addEventButton = new JButton("Add");
 		add(addEventButton);
@@ -67,8 +99,44 @@ public class AddEventWindow extends JDialog {
 		add(errorLabel);
 	}
 	
+	private void initComboBoxes() {
+		Integer options[] = new Integer[12];
+		for (int i = 1; i <= 12; i++) {
+			options[i-1] = i;
+		}
+		startHourComboBox = new JComboBox<Integer>(options);
+		endHourComboBox = new JComboBox<Integer>(options);
+		options = new Integer[60];
+		for (int j = 0; j < 4; j++) {
+			options[j] = j*15;
+		}
+		startMinuteComboBox = new JComboBox<Integer>(options);
+		endMinuteComboBox = new JComboBox<Integer>(options);
+	}
+	
 	public void addActionAdapters(){
-		
+		addEventButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				int year = Integer.parseInt(yearTextField.getText());
+				int month = Integer.parseInt(monthTextField.getText());
+				int day = Integer.parseInt(dayTextField.getText());
+				int startMinute = (int)startMinuteComboBox.getSelectedItem();
+				int startHour = (int)startHourComboBox.getSelectedItem();
+				int endMinute = (int)endMinuteComboBox.getSelectedItem();
+				int endHour = (int)endHourComboBox.getSelectedItem();
+				boolean isAm;
+				if (amButton.isSelected()) {
+					isAm = true;
+				} else {
+					isAm = false;
+				}
+				Date start = new Date(startMinute, startHour, 0, day, month, year, isAm);
+				Date end = new Date(endMinute, endHour, 0, day, month, year, isAm);
+				client.addEvent(new Event(start, end, nameTextField.getText(), "", false));
+				AddEventWindow.this.setVisible(false);
+			}
+			
+		});
 	}
 
 }

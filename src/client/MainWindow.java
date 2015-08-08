@@ -16,9 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import calendar.Date;
 import calendar.Event;
 
 public class MainWindow extends JFrame {
+	private Client c;
 	JButton addEventButton;
 	JPanel centerPanel, rightPanel, dayPanel;
 	JDialog EventWindow;
@@ -27,7 +29,8 @@ public class MainWindow extends JFrame {
 	JLabel [] hourLabels;
 	JLabel [] eventLabels;
 	
-	public MainWindow() {
+	public MainWindow(Client c) {
+		this.c = c;
 		createGUI();
 		addActionAdapters();
 		setVisible(true);
@@ -100,7 +103,7 @@ public class MainWindow extends JFrame {
 		addEventButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
-				EventWindow = new AddEventWindow();				
+				EventWindow = new AddEventWindow(c);				
 			}
 			
 		});
@@ -116,9 +119,15 @@ public class MainWindow extends JFrame {
 		
 	}
 	
-	
-	public static void main (String[] args){
-		MainWindow mainWindow = new MainWindow();
-		mainWindow.displayEvent(3, 11);
+	public void displayEvent(Event e){
+		int start = e.getStart().getHour();
+		int end = e.getEnd().getHour();
+		String displayText = e.getName() + "  @" + e.getLocation();
+		eventLabels[start].setText(displayText);
+		for (int i=start; i<end; i++){
+			eventLabels[i].setBackground(Color.cyan);
+		}
+		
 	}
+	
 }

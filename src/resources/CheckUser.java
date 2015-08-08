@@ -2,12 +2,15 @@ package resources;
 
 import java.io.Serializable;
 
+import calendar.User;
+
 public class CheckUser implements Serializable {
 	
 
 	private static final long serialVersionUID = -4176061050776046663L;
 	String username;
 	String password;
+	private User user;
 	boolean doesExist;
 	
 	public CheckUser(String username, String password) {
@@ -24,6 +27,15 @@ public class CheckUser implements Serializable {
 		this.doesExist = doesExist;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	
 	public String getUsername() {
 		return username;
 	}

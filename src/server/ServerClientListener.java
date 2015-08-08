@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
 
@@ -48,6 +49,15 @@ public class ServerClientListener extends Thread {
 		try {
 			outputStream.writeObject(au);
 			outputStream.flush();			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendBackAddEvent(AddEvent ae) {
+		try {
+			outputStream.writeObject(ae);
+			outputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
