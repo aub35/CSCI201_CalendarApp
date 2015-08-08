@@ -68,7 +68,7 @@ public class ClientPortGUI extends JFrame {
 				int port = Integer.parseInt(portTextField.getText());
 				Client c = new Client("localhost", port);
 				c.start();
-				new LoginWindow(c);
+				ClientPortGUI.this.setVisible(false);
 			}
 		});
 	}

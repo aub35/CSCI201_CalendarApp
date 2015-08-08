@@ -1,0 +1,13 @@
+AddEventWindow :
+	day of week??
+	am/pm for both times
+	location field
+	important
+	illegally formatted events
+	format nicer
+MainWindow : 
+	other modes
+	friends list
+	add upcoming events
+LoginWindow :
+	add errors

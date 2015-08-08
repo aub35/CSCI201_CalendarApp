@@ -3,8 +3,10 @@ package client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
+import resources.GetEvents;
 
 public class ReceiveData extends Thread {
 
@@ -13,6 +15,8 @@ public class ReceiveData extends Thread {
 	
 	CheckUser checkuser;
 	AddUser adduser;
+	AddEvent addevent;
+	GetEvents getevents;
 	
 	ReceiveData(ObjectInputStream inputStream, Client client) {
 		this.inputStream = inputStream;
@@ -28,6 +32,7 @@ public class ReceiveData extends Thread {
 				
 				ifCheckUser(obj);
 				ifAddUser(obj);
+				ifAddEvent(obj);
 				
 			} catch (IOException | ClassNotFoundException e) {
 				break;
@@ -46,8 +51,14 @@ public class ReceiveData extends Thread {
 	private void ifAddUser(Object obj) {
 		if (obj instanceof AddUser) {
 			client.setHaveReceivedUser(true);
-			System.out.println("Client received user");
 			adduser = (AddUser)obj;  
+		}
+	}
+	
+	private void ifAddEvent(Object obj){
+		if (obj instanceof AddEvent) {
+			client.setHaveReceivedAddEvent(true);
+			addevent = (AddEvent)obj;
 		}
 	}
 }

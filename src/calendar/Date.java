@@ -1,7 +1,10 @@
 package calendar;
 
-public class Date {
-	
+import java.io.Serializable;
+
+public class Date implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	//for day of week, 1 is monday, 7 is sunday
 	private int minute, hour, dayOfMonth, dayOfWeek, month, year;
 	private boolean isAm;

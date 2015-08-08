@@ -20,6 +20,7 @@ import calendar.Date;
 import calendar.Event;
 
 public class MainWindow extends JFrame {
+	private Client c;
 	JButton addEventButton;
 	JPanel centerPanel, rightPanel, dayPanel;
 	JDialog EventWindow;
@@ -28,7 +29,8 @@ public class MainWindow extends JFrame {
 	JLabel [] hourLabels;
 	JLabel [] eventLabels;
 	
-	public MainWindow() {
+	public MainWindow(Client c) {
+		this.c = c;
 		createGUI();
 		addActionAdapters();
 		setVisible(true);
@@ -101,7 +103,7 @@ public class MainWindow extends JFrame {
 		addEventButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
-				EventWindow = new AddEventWindow();				
+				EventWindow = new AddEventWindow(c);				
 			}
 			
 		});
@@ -126,6 +128,8 @@ public class MainWindow extends JFrame {
 			eventLabels[i].setBackground(Color.cyan);
 		}
 		
+<<<<<<< HEAD
+=======
 	}
 	
 	public static void main (String[] args){
@@ -133,5 +137,7 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(3, 11);
 		Event e = new Event(new Date(0, 0 , 1, 1, 1, 2015, false), new Date(0, 2, 1, 1, 1, 2015, false), "meeting", "vkc", false);
 		mainWindow.displayEvent(e);
+>>>>>>> master
 	}
+	
 }
