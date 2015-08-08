@@ -128,6 +128,16 @@ public class MainWindow extends JFrame {
 			eventLabels[i].setBackground(Color.cyan);
 		}
 		
+<<<<<<< HEAD
+=======
+	}
+	
+	public static void main (String[] args){
+		MainWindow mainWindow = new MainWindow();
+		mainWindow.displayEvent(3, 11);
+		Event e = new Event(new Date(0, 0 , 1, 1, 1, 2015, false), new Date(0, 2, 1, 1, 1, 2015, false), "meeting", "vkc", false);
+		mainWindow.displayEvent(e);
+>>>>>>> master
 	}
 	
 }
