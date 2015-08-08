@@ -11,3 +11,7 @@ MainWindow :
 	add upcoming events
 LoginWindow :
 	add errors
+Server Client communication :
+	Guest Login
+	update database
+	adding friends

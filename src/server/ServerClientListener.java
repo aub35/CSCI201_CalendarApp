@@ -8,6 +8,7 @@ import java.net.Socket;
 import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
+import resources.GetEvents;
 
 public class ServerClientListener extends Thread {
 
@@ -57,6 +58,15 @@ public class ServerClientListener extends Thread {
 	public void sendBackAddEvent(AddEvent ae) {
 		try {
 			outputStream.writeObject(ae);
+			outputStream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendBackGetEvent(GetEvents ge) {
+		try {
+			outputStream.writeObject(ge);
 			outputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

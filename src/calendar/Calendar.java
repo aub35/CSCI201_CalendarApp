@@ -14,7 +14,7 @@ public class Calendar implements Serializable {
 	private Vector<Event> events;
 	
 	public Calendar() {
-
+		events = new Vector<Event>();
 	}
 	
 	public void addEvent(Event e) {
@@ -31,6 +31,9 @@ public class Calendar implements Serializable {
 	
 	public Vector<Event> getDaysEvent(Date date) {
 		Vector<Event> result = new Vector<Event>();
+		if (events.size() == 0) {
+			return result;
+		}
 		int index = 0;
 		DateComp dc = new DateComp();
 		Date before = events.elementAt(index).getStart();

@@ -68,7 +68,9 @@ public class ReceiveData extends Thread {
 	private void ifGetEvents(Object obj) {
 		if (obj instanceof GetEvents) {
 			GetEvents ge = (GetEvents)obj;
-			
+			server.getEvents(ge);
+			scl.sendBackGetEvent(ge);
+			System.out.println("Sent back " + ge);
 		}
 	}
 }

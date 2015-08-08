@@ -126,12 +126,9 @@ public class MainWindow extends JFrame {
 		eventLabels[start].setText(displayText);
 		for (int i=start; i<end; i++){
 			eventLabels[i].setBackground(Color.cyan);
-		}
-		
-<<<<<<< HEAD
-=======
+		}		
 	}
-	
+/*	
 	public static void main (String[] args){
 		MainWindow mainWindow = new MainWindow();
 		mainWindow.displayEvent(3, 11);
@@ -139,5 +136,5 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 >>>>>>> master
 	}
-	
+*/
 }

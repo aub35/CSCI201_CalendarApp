@@ -1,6 +1,7 @@
 package calendar;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Date implements Serializable {
 
@@ -14,6 +15,17 @@ public class Date implements Serializable {
 		else if (d1.getMonth() != d2.getMonth()) { return false; }
 		else if (d1.getDayOfMonth() != d2.getDayOfMonth()) { return false; }
 		return true;
+	}
+	
+	public static Date getTodaysDate() {
+		int minute = 0, hour = 0, dayOfWeek = 0;
+		LocalDate ld = LocalDate.now();
+		int year = ld.getYear();
+		int month = ld.getMonthValue();
+		int day = ld.getDayOfMonth();
+		Date d =  new Date(minute, hour, dayOfWeek, day, month, year, true);
+		System.out.println("Date: " + d);
+		return d;
 	}
 	
 	public int getMinute() {
@@ -68,4 +80,5 @@ public class Date implements Serializable {
 		str += "\n" + hour + ":" + minute;
 		return str;
 	}
+	
 }

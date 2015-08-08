@@ -20,6 +20,13 @@ public class User implements Serializable {
 		this.isGuest = isGuest;
 	}
 
+	public static boolean isEqual(User u1, User u2) {
+		if (u1.getUsername().equals(u2.getUsername())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void addFriend(User u) {
 		friends.add(u);
 	}

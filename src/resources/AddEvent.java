@@ -13,6 +13,7 @@ public class AddEvent implements Serializable {
 	private boolean successfulAdd;
 	public AddEvent (User u, Event e) {
 		this.e = e;
+		this.u = u;
 		successfulAdd = false;
 	}
 	public Event getE() {

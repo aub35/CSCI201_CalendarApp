@@ -25,6 +25,7 @@ public class AddUser implements Serializable {
 	}
 
 	public User getUser() {
+		System.out.println("AddUser user: " + user);
 		return user;
 	}
 

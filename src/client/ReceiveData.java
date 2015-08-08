@@ -33,6 +33,7 @@ public class ReceiveData extends Thread {
 				ifCheckUser(obj);
 				ifAddUser(obj);
 				ifAddEvent(obj);
+				ifGetEvents(obj);
 				
 			} catch (IOException | ClassNotFoundException e) {
 				break;
@@ -59,6 +60,13 @@ public class ReceiveData extends Thread {
 		if (obj instanceof AddEvent) {
 			client.setHaveReceivedAddEvent(true);
 			addevent = (AddEvent)obj;
+		}
+	}
+	
+	private void ifGetEvents(Object obj) {
+		if (obj instanceof GetEvents) {
+			client.setHaveReceivedGetEvents(true);
+			getevents = (GetEvents)obj;
 		}
 	}
 }

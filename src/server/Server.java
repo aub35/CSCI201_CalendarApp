@@ -75,9 +75,11 @@ public class Server {
 		} else {
 			u = new User("Guest", "", "Guest", true);
 		}
-		userMap.put(u, new Calendar());
+		Calendar c = new Calendar();
+		userMap.put(u, c);
 		au.setSuccessfulAdd(true);
 		au.setUser(u);
+		System.out.println("Server set user: " + u);
 	}
 	
 	public Date currentTime() {
@@ -102,27 +104,42 @@ public class Server {
 	
 	public void addEvent(AddEvent ae) {
 		User u = ae.getU();
+		System.out.println("User: " + u);
 		Event e = ae.getE();
-		Calendar value = userMap.get(u);
+		Calendar value = null;
+		for (User key : userMap.keySet()) {
+			if (User.isEqual(key, u)) {
+				value = userMap.get(key);
+			}
+		}	
 		if (value != null) {
 			value.addEvent(e);
+			ae.setSuccessfulAdd(true);
 		}
-		ae.setSuccessfulAdd(true);
 	}
 	
 	public void getEvents(GetEvents ge) {
 		User u = ge.getUser();
+		System.out.println("User: " + u);
 		Date start = ge.getStart();
 		Date end = ge.getEnd();
-		Calendar value = userMap.get(u);
+		Calendar value = null;
+		for (User key : userMap.keySet()) {
+			if (User.isEqual(key, u)) {
+				value = userMap.get(key);
+			}
+		}		
 		if (value != null) {
 			if (Date.isSameDay(start, end)) {
 				Vector<Event> events = value.getDaysEvent(start);
 				ge.setEvents(events);
 			}
+			ge.setSuccessfulGet(true);
+		} else {
+			System.out.println("Server determined value is null");
 		}
 	}
-	
+/*	
 	//MAKE SURE DATE INCLUDES THE LATEST TIME IN THE DAY
 	public Vector<Event> getDayEvent(User u, Date date) {
 		Vector<Event> result = new Vector<Event>();
@@ -132,6 +149,6 @@ public class Server {
 		}
 		return result;
 	}
-	
+*/	
 }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Vector;
 
 import calendar.Date;
 import calendar.Event;
@@ -57,6 +58,10 @@ public class Client extends Thread {
 		this.haveReceivedAddEvent = haveReceivedAddEvent;
 	}
 	
+	public void setHaveReceivedGetEvents(boolean haveReceivedGetEvents) {
+		this.haveReceivedGetEvents = haveReceivedGetEvents;
+	}
+	
 	public void setIsGuest(boolean isGuest) {
 		this.isGuest = isGuest;
 	}
@@ -80,8 +85,7 @@ public class Client extends Thread {
 			rd.checkuser = null;
 			if (checkuser.doesExist()) {
 				user = checkuser.getUser();
-				openMainWindow();
-				closeLoginWindow();
+				login();
 			} else {
 				System.out.println("Unsuccessful login");
 				//add error message
@@ -108,8 +112,8 @@ public class Client extends Thread {
 			AddUser au = rd.adduser;
 			rd.adduser = null;
 			if (au.isSuccessfulAdd()) {
+				user = au.getUser();
 				login();
-				System.out.println("Have successfully created User and logged in");
 			} else {
 				System.out.println("Did not create user");
 			}
@@ -130,11 +134,12 @@ public class Client extends Thread {
 			while (!haveReceivedAddEvent) {
 				Thread.sleep(100);
 			}
+			Thread.sleep(100);
 			AddEvent ae = rd.addevent;
 			rd.addevent = null;
 			if (ae.isSuccessfulAdd()) {
 				System.out.println("Successfully added event");
-				//update GUI??
+				mainwindow.displayEvent(ae.getE());
 			} else {
 				System.out.println("Unsuccessful add");
 			}
@@ -150,14 +155,17 @@ public class Client extends Thread {
 		try {
 			outputStream.writeObject(new GetEvents(date, date, user));
 			outputStream.flush();
-			System.out.println("Sent GetEvents");
 			while (!haveReceivedGetEvents) {
 				Thread.sleep(100);
 			}
 			GetEvents ge = rd.getevents;
 			rd.getevents = null;
 			if (ge.isSuccessfulGet()) {
+				Vector<Event> events = ge.getEvents();
 				System.out.println("Successfully got events"); 
+				for (int i = 0; i < events.size(); i++) {
+					mainwindow.displayEvent(events.get(i));
+				}
 			} else {
 				System.out.println("Unsuccessful getting events");
 			}
@@ -171,6 +179,7 @@ public class Client extends Thread {
 	public void login() {
 		closeLoginWindow();
 		openMainWindow();
+		getDaysEvents(Date.getTodaysDate());
 	}
 	
 	public void logout() {

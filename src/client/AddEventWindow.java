@@ -106,7 +106,7 @@ public class AddEventWindow extends JDialog {
 		}
 		startHourComboBox = new JComboBox<Integer>(options);
 		endHourComboBox = new JComboBox<Integer>(options);
-		options = new Integer[60];
+		options = new Integer[4];
 		for (int j = 0; j < 4; j++) {
 			options[j] = j*15;
 		}
@@ -132,6 +132,7 @@ public class AddEventWindow extends JDialog {
 				}
 				Date start = new Date(startMinute, startHour, 0, day, month, year, isAm);
 				Date end = new Date(endMinute, endHour, 0, day, month, year, isAm);
+				System.out.println("Date: " + start);
 				client.addEvent(new Event(start, end, nameTextField.getText(), "", false));
 				AddEventWindow.this.setVisible(false);
 			}
