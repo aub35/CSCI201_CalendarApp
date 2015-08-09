@@ -75,6 +75,7 @@ public class Date implements Serializable {
 		return true;
 	}
 	
+	
 	public String toString() {
 		String str = month + "/" + dayOfMonth + "/" + year;
 		str += "\n" + hour + ":" + minute;

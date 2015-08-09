@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -21,21 +22,27 @@ import calendar.Event;
 
 public class MainWindow extends JFrame {
 	private Client c;
-	JButton addEventButton, logoutButton;
-	JPanel centerPanel, rightPanel, dayPanel;
+	JButton addEventButton, logoutButton, previousButton, nextButton;
+	JPanel centerPanel, rightPanel, dayPanel, switchDatePanel;
 	JDialog EventWindow;
 	JScrollPane jsp;
 	GridBagConstraints gbc;
 	JLabel [] hourLabels;
 	JLabel [] eventLabels;
+	Date currDate;
+	Vector<Event> events;
 	
 	public MainWindow(Client c) {
 		this.c = c;
+		//currDate
+		// events...
+		
 		createGUI();
 		addActionAdapters();
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 500);
+		addEventHandlers();
 	}
 	
 	private void createGUI(){
@@ -80,11 +87,24 @@ public class MainWindow extends JFrame {
 		
 		centerPanel.add(jsp);
 		
+				
 		JTextArea eventTextArea = new JTextArea();
 		eventTextArea.setRows(10);
+		eventTextArea.setEditable(false);
+		//eventTextArea.setCursor(null);
+		//eventTextArea.setOpaque(false);
+		//eventTextArea.setFocusable(false);
 		centerPanel.add(eventTextArea);
 		
+		switchDatePanel = new JPanel();
+		previousButton = new JButton("Previous");
+		nextButton = new JButton("Next");
+		switchDatePanel.add(previousButton);
+		switchDatePanel.add(nextButton);
+		centerPanel.add(switchDatePanel);
+		
 		add(centerPanel);
+		
 
 		
 		
@@ -113,31 +133,70 @@ public class MainWindow extends JFrame {
 	}
 	
 	
-	public void displayEvent(int start, int end){
-		//int start  = e.getStart().getHour();
-		//int end = e.getEnd().getHour();
-		for (int i=start; i<end; i++){
-			eventLabels[i].setBackground(Color.cyan);
-		}
-		
-	}
 	
 	public void displayEvent(Event e){
 		int start = e.getStart().getHour();
 		int end = e.getEnd().getHour();
-		String displayText = e.getName() + "  @" + e.getLocation();
+		String displayText = "<HTML>"+e.getName();
+		displayText += "<BR>Start: " + e.getStart().toString();
+		displayText += "<BR>End: " + e.getEnd().toString();
+		displayText += "<BR>@" + e.getLocation();
+		if (e.isImportant()){
+			displayText += "<BR>"+ "important"+ "</HTML>";
+		}
+		displayText += "</HTML>";
 		eventLabels[start].setText(displayText);
 		for (int i=start; i<end; i++){
-			eventLabels[i].setBackground(Color.cyan);
+			eventLabels[i].setBackground(Color.lightGray);
 		}		
 	}
-/*	
-	public static void main (String[] args){
-		MainWindow mainWindow = new MainWindow();
-		mainWindow.displayEvent(3, 11);
-		Event e = new Event(new Date(0, 0 , 1, 1, 1, 2015, false), new Date(0, 2, 1, 1, 1, 2015, false), "meeting", "vkc", false);
-		mainWindow.displayEvent(e);
->>>>>>> master
+	
+	public void clearBoard(){
+		for (int i=0; i<24; i++){
+			eventLabels[i].setText(" ");
+			eventLabels[i].setBackground(dayPanel.getBackground());
+			this.revalidate();
+			this.repaint();
+		}
 	}
-*/
+	
+	
+	private void addEventHandlers(){
+		previousButton.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				clearBoard();
+				//need work here
+				// change currDate value to previous
+				// get previous day events vector
+				//for (int i=0; i<events.size(); i++){
+					//displayEvent(events.get(i));
+				//}			
+			}
+			
+		});
+		
+		nextButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				clearBoard();
+				// need work here
+				// change currDate value to next one
+				// get previous day events vector
+				//for (int i=0; i<events.size(); i++){
+					//displayEvent(events.get(i));
+				//}
+			}
+		});
+	}
+	
+	
+	
+	public static void main (String[] args){
+		Client c = new Client("localhost", 3097);
+		MainWindow mainWindow = new MainWindow(c);
+		Event e = new Event(new Date(0, 0 , 1, 1, 1, 2015, false), new Date(0, 2, 1, 1, 1, 2015, false), "meeting", "vkc", true);
+		mainWindow.displayEvent(e);
+
+	}
+
 }

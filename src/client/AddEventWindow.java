@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -19,12 +20,13 @@ import calendar.Event;
 public class AddEventWindow extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	JLabel nameLabel, dateLabel, startTimeLabel, endTimeLabel, locationLabel, errorLabel;
+	JLabel nameLabel, dateLabel, startTimeLabel, endTimeLabel, locationLabel, errorLabel, locationLanel;
 	JButton addEventButton;
 	JTextField nameTextField, yearTextField, monthTextField, dayTextField, startTimeTextField, endTimeTextField, locationTextField;
 	JComboBox<Integer> startHourComboBox, startMinuteComboBox, endHourComboBox, endMinuteComboBox;
-	JPanel namePanel, datePanel, startTimePanel, endTimePanel, locationPanel, amPmPanel;
+	JPanel namePanel, datePanel, startTimePanel, endTimePanel, locationPanel, amPmPanel, buttonPanel;
 	JRadioButton amButton, pmButton;
+	JCheckBox importantCheckBox;
 	ButtonGroup bg;
 	private Client client;
 	
@@ -39,7 +41,7 @@ public class AddEventWindow extends JDialog {
 		setTitle("Add Event Window");
 		setSize(400, 300);
 		
-		setLayout(new GridLayout(6, 1));
+		setLayout(new GridLayout(7, 1));
 		initComboBoxes();
 		
 		namePanel = new JPanel();
@@ -82,27 +84,42 @@ public class AddEventWindow extends JDialog {
 		endTimePanel.add(endMinuteComboBox);
 		add(endTimePanel);
 		
-		amPmPanel = new JPanel();
-		amButton = new JRadioButton("AM");
-		pmButton = new JRadioButton("PM");
-		bg = new ButtonGroup();
-		amPmPanel.add(amButton);
-		amPmPanel.add(pmButton);
-		bg.add(amButton);
-		bg.add(pmButton);
-		add(amPmPanel);
+		//amPmPanel = new JPanel();
+		//amButton = new JRadioButton("AM");
+		//pmButton = new JRadioButton("PM");
+		//bg = new ButtonGroup();
+		//amPmPanel.add(amButton);
+		//amPmPanel.add(pmButton);
+		//bg.add(amButton);
+		//bg.add(pmButton);
+		//add(amPmPanel);
 		
+		locationPanel = new JPanel();
+		locationLabel = new JLabel("Location: ");
+		locationTextField = new JTextField(15);
+		locationPanel.add(locationLabel);
+		locationPanel.add(locationTextField);
+		add(locationPanel);
+		
+		
+		buttonPanel = new JPanel();
 		addEventButton = new JButton("Add");
-		add(addEventButton);
+		buttonPanel.add(addEventButton);
 		
-		errorLabel = new JLabel();
+		importantCheckBox = new JCheckBox("important");
+		buttonPanel.add(importantCheckBox);
+		buttonPanel.add(addEventButton);
+		
+		add(buttonPanel);
+		
+		errorLabel = new JLabel("error message here");
 		add(errorLabel);
 	}
 	
 	private void initComboBoxes() {
-		Integer options[] = new Integer[12];
-		for (int i = 1; i <= 12; i++) {
-			options[i-1] = i;
+		Integer options[] = new Integer[24];
+		for (int i = 0; i <= 23; i++) {
+			options[i] = i;
 		}
 		startHourComboBox = new JComboBox<Integer>(options);
 		endHourComboBox = new JComboBox<Integer>(options);
@@ -124,16 +141,18 @@ public class AddEventWindow extends JDialog {
 				int startHour = (int)startHourComboBox.getSelectedItem();
 				int endMinute = (int)endMinuteComboBox.getSelectedItem();
 				int endHour = (int)endHourComboBox.getSelectedItem();
-				boolean isAm;
-				if (amButton.isSelected()) {
-					isAm = true;
-				} else {
-					isAm = false;
-				}
-				Date start = new Date(startMinute, startHour, 0, day, month, year, isAm);
-				Date end = new Date(endMinute, endHour, 0, day, month, year, isAm);
+				//boolean isAm;
+				//if (amButton.isSelected()) {
+					//isAm = true;
+				//} else {
+				//	isAm = false;
+				//}
+				Date start = new Date(startMinute, startHour, 0, day, month, year, false);
+				Date end = new Date(endMinute, endHour, 0, day, month, year, false);
+				String location = locationTextField.getText();
+				boolean isImportant = importantCheckBox.isSelected();
 				System.out.println("Date: " + start);
-				client.addEvent(new Event(start, end, nameTextField.getText(), "", false));
+				client.addEvent(new Event(start, end, nameTextField.getText(), location, isImportant));
 				AddEventWindow.this.setVisible(false);
 			}
 			
