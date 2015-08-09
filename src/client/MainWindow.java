@@ -38,7 +38,6 @@ public class MainWindow extends JFrame {
 		// events...
 		
 		createGUI();
-		addActionAdapters();
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 500);
@@ -61,11 +60,12 @@ public class MainWindow extends JFrame {
 		eventLabels = new JLabel[24];
 		
 		for (int i=0; i<24; i++){
-			JLabel label = new JLabel(i+":00");
+			JLabel label = new JLabel("<html>"+i+":00<br/><br/><br/><br/></html>");
 			gbc.gridx = 0;
 			gbc.gridy = i;
 			gbc.weightx =  1;
 			gbc.anchor = GridBagConstraints.CENTER;
+			gbc.fill = GridBagConstraints.BOTH;
 			hourLabels[i] = label;
 			dayPanel.add(label, gbc);
 		}
@@ -77,7 +77,7 @@ public class MainWindow extends JFrame {
 			gbc.weightx =  3;
 			gbc.gridy = i;
 			gbc.gridwidth = 3;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.fill = GridBagConstraints.BOTH;
 			eventLabels[i] = label;
 			dayPanel.add(label, gbc);
 		}
@@ -118,21 +118,7 @@ public class MainWindow extends JFrame {
 		rightPanel.add(logoutButton);
 		add(rightPanel, BorderLayout.EAST);
 	}
-	
-	private void addActionAdapters(){
-		addEventButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				EventWindow = new AddEventWindow(c);				
-			}
-		});
-		logoutButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				c.logout();
-			}
-		});
-	}
-	
-	
+		
 	
 	public void displayEvent(Event e){
 		int start = e.getStart().getHour();
@@ -140,9 +126,11 @@ public class MainWindow extends JFrame {
 		String displayText = "<HTML>"+e.getName();
 		displayText += "<BR>Start: " + e.getStart().toString();
 		displayText += "<BR>End: " + e.getEnd().toString();
-		displayText += "<BR>@" + e.getLocation();
+		if (!e.getLocation().isEmpty()) {
+			displayText += "<BR>@" + e.getLocation();
+		}
 		if (e.isImportant()){
-			displayText += "<BR>"+ "important"+ "</HTML>";
+			displayText += "<BR>"+ "<font color=\"red\"> important </font>";
 		}
 		displayText += "</HTML>";
 		eventLabels[start].setText(displayText);
@@ -162,11 +150,24 @@ public class MainWindow extends JFrame {
 	
 	
 	private void addEventHandlers(){
+		
+		addEventButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				EventWindow = new AddEventWindow(c);				
+			}
+		});
+		
+		logoutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				c.logout();
+			}
+		});
+		
 		previousButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
 				clearBoard();
-				//need work here
+				//TODO need work here
 				// change currDate value to previous
 				// get previous day events vector
 				//for (int i=0; i<events.size(); i++){
@@ -179,7 +180,7 @@ public class MainWindow extends JFrame {
 		nextButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				clearBoard();
-				// need work here
+				//TODO need work here
 				// change currDate value to next one
 				// get previous day events vector
 				//for (int i=0; i<events.size(); i++){

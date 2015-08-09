@@ -134,6 +134,28 @@ public class AddEventWindow extends JDialog {
 	public void addActionAdapters(){
 		addEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
+				// check if any required textfields are empty
+				// if empty, give a error message
+				if (nameTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Name Field is Empty <br /> Please Input Name for the Event </font></html>");
+					return;
+				}	
+				if (yearTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Year Field is Empty <br /> Please Input Year for the Event </font></html>");
+					return;
+				}
+				if (monthTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Mouth Field is Empty <br /> Please Input Mouth for the Event </font></html>");
+					return;
+				}
+				if (dayTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Day Field is Empty <br /> Please Input Day for the Event </font></html>");
+					return;
+				}
+
+				//TODO need work here
+				// need to check if the time is taken
+				
 				int year = Integer.parseInt(yearTextField.getText());
 				int month = Integer.parseInt(monthTextField.getText());
 				int day = Integer.parseInt(dayTextField.getText());
