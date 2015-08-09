@@ -3,6 +3,8 @@ package client;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,9 +20,9 @@ public class LoginWindow extends JDialog {
 	JPanel usernamePanel, passwordPanel, buttonPanel, errorPanel, namePanel;
 	JButton loginButton, createUserButton, guestLoginButton;
 	
-	private Client c;
+	private MyClient c;
 	
-	public LoginWindow(Client c){
+	public LoginWindow(MyClient c){
 		createGUI();
 		addActionAdapters();
 		setVisible(true);
@@ -73,6 +75,12 @@ public class LoginWindow extends JDialog {
 	}
 	
 	public void addActionAdapters(){
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				c.quit();
+			}
+		});
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				c.setIsGuest(false);

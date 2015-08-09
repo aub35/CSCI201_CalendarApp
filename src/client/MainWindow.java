@@ -17,11 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import calendar.Date;
-import calendar.Event;
+import calendar.MyDate;
+import calendar.MyEvent;
 
 public class MainWindow extends JFrame {
-	private Client c;
+	private MyClient c;
 	JButton addEventButton, logoutButton, previousButton, nextButton;
 	JPanel centerPanel, rightPanel, dayPanel, switchDatePanel;
 	JDialog EventWindow;
@@ -29,10 +29,10 @@ public class MainWindow extends JFrame {
 	GridBagConstraints gbc;
 	JLabel [] hourLabels;
 	JLabel [] eventLabels;
-	Date currDate;
-	Vector<Event> events;
+	MyDate currDate;
+	Vector<MyEvent> events;
 	
-	public MainWindow(Client c) {
+	public MainWindow(MyClient c) {
 		this.c = c;
 		//currDate
 		// events...
@@ -134,7 +134,7 @@ public class MainWindow extends JFrame {
 	
 	
 	
-	public void displayEvent(Event e){
+	public void displayEvent(MyEvent e){
 		int start = e.getStart().getHour();
 		int end = e.getEnd().getHour();
 		String displayText = "<HTML>"+e.getName();
@@ -168,10 +168,7 @@ public class MainWindow extends JFrame {
 				clearBoard();
 				//need work here
 				// change currDate value to previous
-				// get previous day events vector
-				//for (int i=0; i<events.size(); i++){
-					//displayEvent(events.get(i));
-				//}			
+				c.previousDay();
 			}
 			
 		});
@@ -182,15 +179,13 @@ public class MainWindow extends JFrame {
 				// need work here
 				// change currDate value to next one
 				// get previous day events vector
-				//for (int i=0; i<events.size(); i++){
-					//displayEvent(events.get(i));
-				//}
+				c.nextDay();
 			}
 		});
 	}
 	
 	
-	
+	/*
 	public static void main (String[] args){
 		Client c = new Client("localhost", 3097);
 		MainWindow mainWindow = new MainWindow(c);
@@ -198,5 +193,5 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 
 	}
-
+*/
 }

@@ -11,16 +11,25 @@ import resources.GetEvents;
 public class ReceiveData extends Thread {
 
 	private ObjectInputStream inputStream;
-	private Client client;
+	private MyClient client;
+	private boolean isQuit = false;
 	
 	CheckUser checkuser;
 	AddUser adduser;
 	AddEvent addevent;
 	GetEvents getevents;
 	
-	ReceiveData(ObjectInputStream inputStream, Client client) {
+	ReceiveData(ObjectInputStream inputStream, MyClient client) {
 		this.inputStream = inputStream;
 		this.client = client;
+	}
+	
+	public boolean isQuit() {
+		return isQuit;
+	}
+
+	public void setQuit(boolean isQuit) {
+		this.isQuit = isQuit;
 	}
 	
 	public void run() {
@@ -35,10 +44,11 @@ public class ReceiveData extends Thread {
 				ifAddEvent(obj);
 				ifGetEvents(obj);
 				
-			} catch (IOException | ClassNotFoundException e) {
+				if (isQuit) { break; }
+				Thread.sleep(10);
+			} catch (IOException | ClassNotFoundException | InterruptedException e) {
 				break;
 			}
-			
 		}
 	}
 	
@@ -69,4 +79,6 @@ public class ReceiveData extends Thread {
 			getevents = (GetEvents)obj;
 		}
 	}
+	
+	
 }
