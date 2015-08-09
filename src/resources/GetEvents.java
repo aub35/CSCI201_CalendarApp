@@ -3,42 +3,42 @@ package resources;
 import java.io.Serializable;
 import java.util.Vector;
 
-import calendar.Date;
-import calendar.Event;
+import calendar.MyDate;
+import calendar.MyEvent;
 import calendar.User;
 
 public class GetEvents implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Date start;
-	private Date end;
+	private MyDate start;
+	private MyDate end;
 	private boolean isSuccessfulGet;
-	private Vector<Event> events;
+	private Vector<MyEvent> events;
 	private User user;
 	
 	public User getUser() {
 		return user;
 	}
 
-	public Vector<Event> getEvents() {
+	public Vector<MyEvent> getEvents() {
 		return events;
 	}
 
-	public void setEvents(Vector<Event> events) {
+	public void setEvents(Vector<MyEvent> events) {
 		this.events = events;
 	}
 
-	public GetEvents(Date start, Date end, User user) {
+	public GetEvents(MyDate start, MyDate end, User user) {
 		this.start = start;
 		this.end = end;
 		this.user = user;
 	}
 
-	public Date getStart() {
+	public MyDate getStart() {
 		return start;
 	}
 
-	public Date getEnd() {
+	public MyDate getEnd() {
 		return end;
 	}
 
@@ -49,6 +49,5 @@ public class GetEvents implements Serializable {
 	public void setSuccessfulGet(boolean isSuccessfulGet) {
 		this.isSuccessfulGet = isSuccessfulGet;
 	}
-	
 	
 }

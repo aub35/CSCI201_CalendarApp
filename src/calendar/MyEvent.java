@@ -2,14 +2,14 @@ package calendar;
 
 import java.io.Serializable;
 
-public class Event implements Serializable {
+public class MyEvent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Date start, end;
+	private MyDate start, end;
 	private String name, location;
 	private boolean isImportant;
 	
-	public Event(Date start, Date end, String name, String location,
+	public MyEvent(MyDate start, MyDate end, String name, String location,
 			boolean isImportant) {
 		this.start = start;
 		this.end = end;
@@ -18,11 +18,11 @@ public class Event implements Serializable {
 		this.isImportant = isImportant;
 	}
 
-	public Date getStart() {
+	public MyDate getStart() {
 		return start;
 	}
 
-	public Date getEnd() {
+	public MyDate getEnd() {
 		return end;
 	}
 

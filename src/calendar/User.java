@@ -12,6 +12,7 @@ public class User implements Serializable {
 	private String username, password, name;
 	private boolean isGuest;
 	private Vector<User> friends;
+	private MyDate currDate;
 	
 	public User(String username, String password, String name, boolean isGuest) {
 		this.username = username;
@@ -49,5 +50,13 @@ public class User implements Serializable {
 
 	public Vector<User> getFriends() {
 		return friends;
+	}
+
+	public MyDate getCurrDate() {
+		return currDate;
+	}
+
+	public void setCurrDate(MyDate currDate) {
+		this.currDate = currDate;
 	}
 }

@@ -11,10 +11,10 @@ import resources.GetEvents;
 public class ReceiveData extends Thread {
 
 	private ObjectInputStream inputStream;
-	private Server server;
+	private MyServer server;
 	private ServerClientListener scl;
 	
-	ReceiveData(ObjectInputStream inputStream, Server server, ServerClientListener scl) {
+	ReceiveData(ObjectInputStream inputStream, MyServer server, ServerClientListener scl) {
 		this.inputStream = inputStream;
 		this.server = server;
 		this.scl = scl;
@@ -59,6 +59,7 @@ public class ReceiveData extends Thread {
 	
 	private void ifAddEvent(Object obj) {
 		if (obj instanceof AddEvent) {
+			
 			AddEvent ae = (AddEvent)obj;
 			server.addEvent(ae);
 			scl.sendBackAddEvent(ae);
@@ -67,10 +68,11 @@ public class ReceiveData extends Thread {
 	
 	private void ifGetEvents(Object obj) {
 		if (obj instanceof GetEvents) {
-			GetEvents ge = (GetEvents)obj;
+			/*
+			System.out.println("Server GetEvents date: " + ge.getUser().getCurrDate());
 			server.getEvents(ge);
 			scl.sendBackGetEvent(ge);
-			System.out.println("Sent back " + ge);
+			System.out.println("Sent back " + ge); */
 		}
 	}
 }
