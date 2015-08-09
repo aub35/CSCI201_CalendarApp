@@ -163,15 +163,17 @@ public class MyClient extends Thread {
 	public void getDaysEvents(MyDate date) {
 		try {
 			user.setCurrDate(date);
-			outputStream.writeObject(new GetEvents(date, date, user));
+			GetEvents ge2 = new GetEvents(date, date, user);
+			outputStream.writeObject(ge2);
 			outputStream.flush();
-			System.out.println("Sent ge with : " + date);
+			System.out.println("Sent ge with : " + ge2.getUser().getCurrDate());
 			while (!haveReceivedGetEvents) {
 				Thread.sleep(100);
 			}
 			Thread.sleep(100);
 			GetEvents ge = rd.getevents;
 			if (ge.isSuccessfulGet()) {
+				System.out.println("Original sent with : " + ge2.getUser().getCurrDate());
 				System.out.println("Received ge with : " + ge.getStart());
 				Vector<MyEvent> events = ge.getEvents();
 				System.out.println("Successfully got " + events.size() + " events"); 
@@ -195,8 +197,9 @@ public class MyClient extends Thread {
 	public void login() {
 		closeLoginWindow();
 		openMainWindow();
+		MyDate tempDate = new MyDate(0, 0, 1, 1, 2015);
 		currentDate = MyDate.getTodaysDate();
-		getDaysEvents(currentDate);
+		getDaysEvents(tempDate);
 	}
 	
 	public void logout() {

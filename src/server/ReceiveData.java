@@ -68,11 +68,11 @@ public class ReceiveData extends Thread {
 	
 	private void ifGetEvents(Object obj) {
 		if (obj instanceof GetEvents) {
-			/*
+			GetEvents ge = (GetEvents)obj;
 			System.out.println("Server GetEvents date: " + ge.getUser().getCurrDate());
 			server.getEvents(ge);
 			scl.sendBackGetEvent(ge);
-			System.out.println("Sent back " + ge); */
+			System.out.println("Sent back " + ge); 
 		}
 	}
 }
