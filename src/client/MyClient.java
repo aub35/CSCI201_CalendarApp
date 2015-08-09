@@ -6,8 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Vector;
 
-import calendar.Date;
-import calendar.Event;
+import calendar.MyDate;
+import calendar.MyEvent;
 import calendar.User;
 import resources.AddEvent;
 import resources.AddUser;
@@ -18,7 +18,7 @@ import resources.GetEvents;
 //TODO: login screen GUI
 //log out
 
-public class Client extends Thread {
+public class MyClient extends Thread {
 
 	private Socket s;
 	private ObjectOutputStream outputStream;
@@ -32,10 +32,10 @@ public class Client extends Thread {
 	private boolean haveReceivedLogin, haveReceivedUser, haveReceivedAddEvent,
 	haveReceivedGetEvents = false;
 	private User user;
-	private Date currentDate;
+	private MyDate currentDate;
 	
 	//constructor
-	public Client(String hostname, int port) {
+	public MyClient(String hostname, int port) {
 		try {
 			s = new Socket(hostname, port);
 			outputStream = new ObjectOutputStream(s.getOutputStream());
@@ -71,6 +71,7 @@ public class Client extends Thread {
 	public void run() {
 		rd = new ReceiveData(inputStream, this);
 		rd.start();
+		System.out.println("Reached end of client thread");
 	}
 	
 	//functionality for talking to server
@@ -132,7 +133,7 @@ public class Client extends Thread {
 	}
 	
 	//add an event
-	public void addEvent(Event e) {
+	public void addEvent(MyEvent e) {
 		try {
 			outputStream.writeObject(new AddEvent(user, e));
 			outputStream.flush();
@@ -159,18 +160,23 @@ public class Client extends Thread {
 	}
 	
 	//get day's events
-	public void getDaysEvents(Date date) {
+	public void getDaysEvents(MyDate date) {
 		try {
-			outputStream.writeObject(new GetEvents(date, date, user));
+			user.setCurrDate(date);
+			GetEvents ge2 = new GetEvents(date, date, user);
+			outputStream.writeObject(ge2);
 			outputStream.flush();
+			System.out.println("Sent ge with : " + ge2.getUser().getCurrDate());
 			while (!haveReceivedGetEvents) {
 				Thread.sleep(100);
 			}
 			Thread.sleep(100);
 			GetEvents ge = rd.getevents;
 			if (ge.isSuccessfulGet()) {
-				Vector<Event> events = ge.getEvents();
-				System.out.println("Successfully got events"); 
+				System.out.println("Original sent with : " + ge2.getUser().getCurrDate());
+				System.out.println("Received ge with : " + ge.getStart());
+				Vector<MyEvent> events = ge.getEvents();
+				System.out.println("Successfully got " + events.size() + " events"); 
 				for (int i = 0; i < events.size(); i++) {
 					mainwindow.displayEvent(events.get(i));
 				}
@@ -187,17 +193,41 @@ public class Client extends Thread {
 		}
 	}
 	
+	//functionality for talking to GUI
 	public void login() {
 		closeLoginWindow();
 		openMainWindow();
-		currentDate = Date.getTodaysDate();
-		getDaysEvents(currentDate);
+		MyDate tempDate = new MyDate(0, 0, 1, 1, 2015);
+		currentDate = MyDate.getTodaysDate();
+		getDaysEvents(tempDate);
 	}
 	
 	public void logout() {
 		closeMainWindow();
 		openLoginWindow();
 		user = null;
+	}
+	
+	public void nextDay() {
+		currentDate = MyDate.getNextDay(currentDate);
+		user.setCurrDate(currentDate);
+		getDaysEvents(currentDate);
+	}
+	
+	public void previousDay() {
+		currentDate = MyDate.getPrevDay(currentDate);
+		user.setCurrDate(currentDate);
+		getDaysEvents(currentDate);
+	}
+	
+	public void quit() {
+		try {
+			rd.setQuit(true);
+			Thread.sleep(20);
+			s.close();
+		} catch (IOException | InterruptedException ie) {
+			ie.printStackTrace();
+		}
 	}
 	
 	//GUI functionality

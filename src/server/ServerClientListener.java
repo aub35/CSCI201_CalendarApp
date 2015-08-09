@@ -13,11 +13,11 @@ import resources.GetEvents;
 public class ServerClientListener extends Thread {
 
 	private Socket socket;
-	private Server server;
+	private MyServer server;
 	private ObjectOutputStream outputStream;
 	private ObjectInputStream inputStream;
 	
-	public ServerClientListener(Socket s, Server server) {
+	public ServerClientListener(Socket s, MyServer server) {
 		socket = s;
 		this.server = server;
 	}

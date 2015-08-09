@@ -13,27 +13,27 @@ import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
-import calendar.Calendar;
-import calendar.Date;
-import calendar.Event;
+import calendar.MyCalendar;
+import calendar.MyDate;
+import calendar.MyEvent;
 
 //TODO : hard coded port
 //add parsing existing users
 //guest user interface
 
 
-public class Server {
+public class MyServer {
 
 	private ServerSocket ss;
 	private static ServerListener sl;
 	
-	private Map<User, Calendar> userMap;
+	private Map<User, MyCalendar> userMap;
 	
-	public Server(int port) {
+	public MyServer(int port) {
 		
 		//instantiate GUI for server
 		try {
-			userMap = new HashMap<User, Calendar>();
+			userMap = new HashMap<User, MyCalendar>();
 			ss = new ServerSocket(port);
 			sl = new ServerListener(ss, this);
 			sl.start();
@@ -75,37 +75,29 @@ public class Server {
 		} else {
 			u = new User("Guest", "", "Guest", true);
 		}
-		Calendar c = new Calendar();
+		MyCalendar c = new MyCalendar();
 		userMap.put(u, c);
 		au.setSuccessfulAdd(true);
 		au.setUser(u);
 	}
 	
-	public Date currentTime() {
+	public MyDate currentTime() {
 		LocalTime lt = LocalTime.now();
 		int minute = lt.getMinute();
-		int hour = lt.getHour();
-		boolean isAm = true;
-		if (lt.isAfter(LocalTime.NOON)) { 
-			hour -= 12; 
-			isAm = false;
-		}
-		
+		int hour = lt.getHour();		
 		LocalDate ld = LocalDate.now();
 		int dayOfMonth = ld.getDayOfMonth();
-		int dayOfWeek = ld.getDayOfWeek().getValue(); //1 is monday, 7 is sunday
 		int month = ld.getMonthValue();
 		int year = ld.getYear();
 		
 		
-		return new Date(minute, hour, dayOfWeek, dayOfMonth, month, year, isAm);		
+		return new MyDate(minute, hour, dayOfMonth, month, year);		
 	}
 	
 	public void addEvent(AddEvent ae) {
 		User u = ae.getU();
-		System.out.println("User: " + u);
-		Event e = ae.getE();
-		Calendar value = null;
+		MyEvent e = ae.getE();
+		MyCalendar value = null;
 		for (User key : userMap.keySet()) {
 			if (User.isEqual(key, u)) {
 				value = userMap.get(key);
@@ -119,18 +111,18 @@ public class Server {
 	
 	public void getEvents(GetEvents ge) {
 		User u = ge.getUser();
-		System.out.println("User: " + u);
-		Date start = ge.getStart();
-		Date end = ge.getEnd();
-		Calendar value = null;
+		MyDate start = u.getCurrDate();
+		MyDate end = u.getCurrDate();
+		MyCalendar value = null;
 		for (User key : userMap.keySet()) {
 			if (User.isEqual(key, u)) {
 				value = userMap.get(key);
 			}
 		}		
 		if (value != null) {
-			if (Date.isSameDay(start, end)) {
-				Vector<Event> events = value.getDaysEvent(start);
+			System.out.println("GetEvents date: " + start);
+			if (MyDate.isSameDay(start, end)) {
+				Vector<MyEvent> events = value.getDaysEvent(start);
 				ge.setEvents(events);
 			}
 			ge.setSuccessfulGet(true);

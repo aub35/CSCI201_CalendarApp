@@ -5,44 +5,53 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
-public class Calendar implements Serializable {
+public class MyCalendar implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Vector<Event> events;
+	private Vector<MyEvent> events;
 	
-	public Calendar() {
-		events = new Vector<Event>();
+	public MyCalendar() {
+		events = new Vector<MyEvent>();
 	}
 	
-	public void addEvent(Event e) {
+	public void addEvent(MyEvent e) {
+		for (int j = 0; j < events.size(); j++) {
+			System.out.println(e.getStart() + " - ");
+		}
+		System.out.println();
 		events.add(e);
 		Collections.sort(events, new EventComp());
 		for (int i = 0; i < events.size(); i++) {
-			System.out.println(e.getStart());
+			MyEvent tempE = events.elementAt(i);
+			System.out.print(tempE.getStart() + " - ");
 		}
+		System.out.println();
 	}
 	
 	public int getLength() {
 		return events.size();
 	}
 	
-	public Vector<Event> getDaysEvent(Date date) {
-		Vector<Event> result = new Vector<Event>();
+	public Vector<MyEvent> getDaysEvent(MyDate date) {
+		System.out.println("Date To Compare: " + date);
+		Vector<MyEvent> result = new Vector<MyEvent>();
 		if (events.size() == 0) {
 			return result;
 		}
 		int index = 0;
 		DateComp dc = new DateComp();
-		Date before = events.elementAt(index).getStart();
+		MyDate before = events.elementAt(index).getStart();
 		while (dc.compare(before, date) < 0) {
 			index++;
+			System.out.println("Before Iteration: " + index);
 			if (index >= events.size()) { break; }
 			before = events.elementAt(index).getStart();
 		}
-		while (Date.isSameDay(before, date)) {
+		while (MyDate.isSameDay(before, date)) {
+			System.out.println("Same Day Iteration: " + index);
 			result.add(events.elementAt(index));
 			index++;
 			if (index >= events.size()) { break; }
@@ -52,9 +61,9 @@ public class Calendar implements Serializable {
 	}
 }
 
-class DateComp implements Comparator<Date> {
+class DateComp implements Comparator<MyDate> {
 	
-	public int compare(Date d1, Date d2) {
+	public int compare(MyDate d1, MyDate d2) {
 		if (d1.isEqualTo(d2)) {
 			return 0;
 		} else { 
@@ -66,8 +75,6 @@ class DateComp implements Comparator<Date> {
 					if (d1.getDayOfMonth() == d2.getDayOfMonth()) {
 						int e1Hour = d1.getHour();
 						int e2Hour = d2.getHour();
-						if (!d1.isAm()) { e1Hour += 12; }
-						if (!d2.isAm()) { e2Hour += 12; }
 						//if they have the same hour
 						if(e1Hour == e2Hour) {
 							return (d1.getMinute() - d2.getMinute());
@@ -88,11 +95,11 @@ class DateComp implements Comparator<Date> {
 	
 }
 
-class EventComp implements Comparator<Event> {
+class EventComp implements Comparator<MyEvent> {
 
-	public int compare(Event e1, Event e2) {
-		Date e1Start = e1.getStart();
-		Date e2Start = e2.getStart();
+	public int compare(MyEvent e1, MyEvent e2) {
+		MyDate e1Start = e1.getStart();
+		MyDate e2Start = e2.getStart();
 		if (e1Start.isEqualTo(e2Start)) {
 			return 0;
 		} else { 
@@ -104,8 +111,6 @@ class EventComp implements Comparator<Event> {
 					if (e1Start.getDayOfMonth() == e2Start.getDayOfMonth()) {
 						int e1Hour = e1Start.getHour();
 						int e2Hour = e2Start.getHour();
-						if (!e1Start.isAm()) { e1Hour += 12; }
-						if (!e2Start.isAm()) { e2Hour += 12; }
 						//if they have the same hour
 						if(e1Hour == e2Hour) {
 							return (e1Start.getMinute() - e2Start.getMinute());

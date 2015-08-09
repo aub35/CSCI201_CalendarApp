@@ -6,9 +6,9 @@ import java.util.Scanner;
 public class SendData extends Thread {
 
 	PrintWriter outputStream;
-	Client client;
+	MyClient client;
 	
-	SendData(PrintWriter outputStream, Client client) {
+	SendData(PrintWriter outputStream, MyClient client) {
 		this.outputStream = outputStream;
 		this.client = client;
 	}

@@ -2,21 +2,21 @@ package resources;
 
 import java.io.Serializable;
 
-import calendar.Event;
+import calendar.MyEvent;
 import calendar.User;
 
 public class AddEvent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Event e;
+	private MyEvent e;
 	private User u;
 	private boolean successfulAdd;
-	public AddEvent (User u, Event e) {
+	public AddEvent (User u, MyEvent e) {
 		this.e = e;
 		this.u = u;
 		successfulAdd = false;
 	}
-	public Event getE() {
+	public MyEvent getE() {
 		return e;
 	}
 	public User getU() {

@@ -66,7 +66,7 @@ public class HostAndPortGUI extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				int port = Integer.parseInt(portTextField.getText());
-				new Server(port);
+				new MyServer(port);
 			}
 		});
 	}

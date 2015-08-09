@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import calendar.Date;
-import calendar.Event;
+import calendar.MyDate;
+import calendar.MyEvent;
 
 public class AddEventWindow extends JDialog {
 
@@ -28,9 +28,9 @@ public class AddEventWindow extends JDialog {
 	JRadioButton amButton, pmButton;
 	JCheckBox importantCheckBox;
 	ButtonGroup bg;
-	private Client client;
+	private MyClient client;
 	
-	public AddEventWindow(Client c){
+	public AddEventWindow(MyClient c){
 		this.client = c;
 		setModal(true);
 		createGUI();
@@ -163,18 +163,12 @@ public class AddEventWindow extends JDialog {
 				int startHour = (int)startHourComboBox.getSelectedItem();
 				int endMinute = (int)endMinuteComboBox.getSelectedItem();
 				int endHour = (int)endHourComboBox.getSelectedItem();
-				//boolean isAm;
-				//if (amButton.isSelected()) {
-					//isAm = true;
-				//} else {
-				//	isAm = false;
-				//}
-				Date start = new Date(startMinute, startHour, 0, day, month, year, false);
-				Date end = new Date(endMinute, endHour, 0, day, month, year, false);
+				MyDate start = new MyDate(startMinute, startHour, day, month, year);
+				MyDate end = new MyDate(endMinute, endHour, day, month, year);
 				String location = locationTextField.getText();
 				boolean isImportant = importantCheckBox.isSelected();
 				System.out.println("Date: " + start);
-				client.addEvent(new Event(start, end, nameTextField.getText(), location, isImportant));
+				client.addEvent(new MyEvent(start, end, nameTextField.getText(), location, isImportant));
 				AddEventWindow.this.setVisible(false);
 			}
 			

@@ -7,9 +7,9 @@ import java.net.Socket;
 public class ServerListener extends Thread {
 
 	private ServerSocket ss;
-	private Server server;
+	private MyServer server;
 	
-	public ServerListener(ServerSocket ss, Server server) {
+	public ServerListener(ServerSocket ss, MyServer server) {
 		this.ss =ss;
 		this.server = server;
 	}

@@ -7,9 +7,9 @@ import java.util.Scanner;
 public class SendData extends Thread {
 
 	private ObjectOutputStream outputStream;
-	private Server server;
+	private MyServer server;
 	
-	SendData(ObjectOutputStream outputStream, Server server) {
+	SendData(ObjectOutputStream outputStream, MyServer server) {
 		this.outputStream = outputStream;
 		this.server = server;
 	}
