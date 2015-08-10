@@ -162,7 +162,8 @@ public class MyClient extends Thread {
 	//get day's events
 	public void getDaysEvents(MyDate date) {
 		try {
-			user.setCurrDate(date);
+//			user.setCurrDate(date);
+			System.out.println("getDaysEvents date : " + date);
 			GetEvents ge2 = new GetEvents(date, date, user);
 			outputStream.writeObject(ge2);
 			outputStream.flush();
@@ -197,9 +198,9 @@ public class MyClient extends Thread {
 	public void login() {
 		closeLoginWindow();
 		openMainWindow();
-		MyDate tempDate = new MyDate(0, 0, 1, 1, 2015);
 		currentDate = MyDate.getTodaysDate();
-		getDaysEvents(tempDate);
+		user.setCurrDate(currentDate);
+		getDaysEvents(currentDate);
 	}
 	
 	public void logout() {

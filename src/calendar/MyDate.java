@@ -17,6 +17,11 @@ public class MyDate implements Serializable {
 		this.year = year;
 	}
 	
+	public static int getDayOfWeek(MyDate d) {
+		LocalDate ld = LocalDate.of(d.getYear(), d.getMonth(), d.getDayOfMonth());
+		return ld.getDayOfWeek().getValue();
+	}
+	
 	public static boolean isSameDay(MyDate d1, MyDate d2) {
 		if (d1.getYear() != d2.getYear()) { return false; }
 		else if (d1.getMonth() != d2.getMonth()) { return false; }

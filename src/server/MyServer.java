@@ -130,7 +130,7 @@ public class MyServer {
 			System.out.println("Server determined value is null");
 		}
 	}
-/*	
+/*
 	//MAKE SURE DATE INCLUDES THE LATEST TIME IN THE DAY
 	public Vector<Event> getDayEvent(User u, Date date) {
 		Vector<Event> result = new Vector<Event>();
