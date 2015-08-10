@@ -137,5 +137,9 @@ public class MyDate implements Serializable {
 		this.month = month;
 	}
 	
+	public String displayDate(){
+		String str = String.format("%02d/%02d/%04d", month, dayOfMonth, year);
+		return str;
+	}
 	
 }

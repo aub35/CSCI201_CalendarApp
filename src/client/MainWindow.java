@@ -7,6 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -27,26 +30,28 @@ import calendar.User;
 public class MainWindow extends JFrame {
 	private MyClient c;
 	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton;
-	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel, leftPanel;
+	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel, leftPanel, infoPanel;
 	JDialog addEventWindow, addFriendWindow;
-	JScrollPane jsp;
+	JScrollPane jsp, friendScrollPane;
 	GridBagConstraints gbc;
 	JLabel [] hourLabels, eventLabels, weekdayLabels;
 	JLabel [] monthDayLabels;
-	JLabel currDateLabel, modeLabel;
+	JLabel currDateLabel, currUserLabel, modeLabel;
 	JTextArea friendsTextArea;
 	MyDate currDate;
 	Vector<MyEvent> events;
 	boolean monthlyMode;
 	JRadioButton dailyRadioButton, monthlyRadioButton;
 	ButtonGroup modeButtonGroup;
+	int daysInMonth;
+
 	
 	
 	public MainWindow(MyClient c) {
 		this.c = c;
 		//TODO
-		currDate = c.getCurrDate();
-		//currDate = new MyDate(0, 0, 9, 8, 2015);
+		//currDate = c.getCurrDate();
+		currDate = new MyDate(0, 0, 9, 8, 2015);
 		// events
 		
 		monthlyMode = false;
@@ -63,8 +68,13 @@ public class MainWindow extends JFrame {
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		
-		//TODO add current date Label
-		
+		//TODO add current date Label and username
+		infoPanel = new JPanel();
+		currDateLabel = new JLabel(currDate.displayDate());
+		infoPanel.add(currDateLabel);
+		currUserLabel = new JLabel();
+		infoPanel.add(currUserLabel);
+		add(infoPanel);
 		
 		
 		//Panel for Calendar
@@ -143,6 +153,8 @@ public class MainWindow extends JFrame {
 		friendsTextArea = new JTextArea();
 		friendsTextArea.setEditable(false);
 		rightPanel.add(friendsTextArea);
+		//friendScrollPane = new JScrollPane(friendScrollPane);
+		//rightPanel.add(friendScrollPane);
 		
 		
 		add(rightPanel, BorderLayout.EAST);
@@ -193,8 +205,8 @@ public class MainWindow extends JFrame {
 		for (int i=0; i<24; i++){
 			eventLabels[i].setText(" ");
 			eventLabels[i].setBackground(dayPanel.getBackground());
-			this.revalidate();
-			this.repaint();
+			revalidate();
+			repaint();
 		}
 	}
 	
@@ -253,6 +265,12 @@ public class MainWindow extends JFrame {
 				displayDaily();
 			}
 		});
+		
+		for (int i=0; i<daysInMonth; i++){
+			monthDayLabels[i].addMouseListener(new LabelClicked(i+1));
+		}
+		
+		
 	}
 	
 	private void createMonthPanel(){
@@ -292,7 +310,6 @@ public class MainWindow extends JFrame {
 			monthPanel.add(label);
 		}
 		
-		int daysInMonth;
 		if (firstDayOfMonth.isEndOfMonth(month, 28)){
 			daysInMonth = 28;
 		}
@@ -334,7 +351,23 @@ public class MainWindow extends JFrame {
 		friendsTextArea.append(u.getName() + "\n" + u.getUsername() + "\n");
 	}
 	
-/*	
+	class LabelClicked extends MouseAdapter{
+		int day;
+		public LabelClicked(int day){
+			this.day = day;
+		}
+		public void mouseClicked(MouseEvent me){
+			currDate = new MyDate(0, 0, day, currDate.getMonth(), currDate.getYear());
+			currDateLabel.setText(currDate.displayDate());
+			//c.getDaysEvents(currDate);
+			dailyRadioButton.setSelected(true);
+			monthlyMode = false;
+			displayDaily();
+			
+		}
+	}
+	
+	
 	public static void main (String[] args){
 		
 		MyClient c = new MyClient("localhost", 1111);
@@ -343,6 +376,6 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 		//mainWindow.displayMonth();
 	}
-*/
+
 
 }
