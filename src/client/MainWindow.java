@@ -41,6 +41,7 @@ public class MainWindow extends JFrame {
 	JLabel currDateLabel, currUserLabel, modeLabel;
 	JTextArea friendsTextArea;
 	MyDate currDate;
+	User currUser;
 	Vector<MyEvent> events;
 	boolean monthlyMode;
 	JRadioButton dailyRadioButton, monthlyRadioButton;
@@ -52,8 +53,8 @@ public class MainWindow extends JFrame {
 	public MainWindow(MyClient c) {
 		this.c = c;
 		//TODO
-		//currDate = c.getCurrDate();
-		currDate = new MyDate(0, 0, 9, 8, 2015);
+		currDate = c.getCurrDate();
+		//currDate = new MyDate(0, 0, 9, 8, 2015);
 		// events
 		
 		monthlyMode = false;
@@ -74,9 +75,10 @@ public class MainWindow extends JFrame {
 		infoPanel = new JPanel();
 		currDateLabel = new JLabel(currDate.displayDate());
 		infoPanel.add(currDateLabel);
-		currUserLabel = new JLabel();
+		currUser = c.getCurrUser();
+		currUserLabel = new JLabel("Current User: " + currUser.getUsername());
 		infoPanel.add(currUserLabel);
-		add(infoPanel);
+		centerPanel.add(infoPanel);
 		
 		
 		//Panel for Calendar
@@ -281,10 +283,13 @@ public class MainWindow extends JFrame {
 				int selection = JOptionPane.showConfirmDialog(MainWindow.this, message, "Message", JOptionPane.YES_NO_OPTION);
 				switch (selection){
 					case JOptionPane.YES_OPTION:
+						
 						break;
 					case JOptionPane.NO_OPTION:
+						
 						break;
 					case JOptionPane.CLOSED_OPTION:
+						
 						break;
 				}
 			}
@@ -362,6 +367,9 @@ public class MainWindow extends JFrame {
 
 	public void displayDaily(){
 		calPanel.remove(monthPanel);
+		
+		clearEvents();
+		c.getDaysEvents(currDate);
 		calPanel.add(jsp);
 		validate();
 		repaint();
@@ -387,7 +395,7 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
-	
+/*	
 	public static void main (String[] args){
 		
 		MyClient c = new MyClient("localhost", 1111);
@@ -396,7 +404,7 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 		//mainWindow.displayMonth();
 	}
-
+*/
 
 
 }

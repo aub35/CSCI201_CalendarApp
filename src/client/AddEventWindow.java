@@ -154,15 +154,28 @@ public class AddEventWindow extends JDialog {
 				}
 
 				//TODO need work here
-				// need to check if the time is taken
+				int year, month, day;
+				try{
+					year = Integer.parseInt(yearTextField.getText());
+					month = Integer.parseInt(monthTextField.getText());
+					day = Integer.parseInt(dayTextField.getText());
+				} catch (NumberFormatException nfe){
+					errorLabel.setText("<html><font color=\"red\">Wrong format for Date</font></html>");
+					return;
+				}
 				
-				int year = Integer.parseInt(yearTextField.getText());
-				int month = Integer.parseInt(monthTextField.getText());
-				int day = Integer.parseInt(dayTextField.getText());
 				int startMinute = (int)startMinuteComboBox.getSelectedItem();
 				int startHour = (int)startHourComboBox.getSelectedItem();
 				int endMinute = (int)endMinuteComboBox.getSelectedItem();
 				int endHour = (int)endHourComboBox.getSelectedItem();
+				if (startHour>endHour){
+					errorLabel.setText("<html><font color=\"red\">Illegal Time </font></html>");
+					return;
+				}
+				else if (startHour==endHour && startMinute>endMinute){
+					errorLabel.setText("<html><font color=\"red\">Illegal Time </font></html>");
+					return;
+				}
 				MyDate start = new MyDate(startMinute, startHour, day, month, year);
 				MyDate end = new MyDate(endMinute, endHour, day, month, year);
 				String location = locationTextField.getText();

@@ -90,7 +90,7 @@ public class AddFriendWindow extends JDialog {
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (usernameList.isSelectionEmpty()) {
-					errorLabel.setText("No user selected! Please select one from list above");
+					errorLabel.setText("<html><font color=\"red\">No user selected! Please select one from list above</font></html>");
 				} else {
 					String username = usernameList.getSelectedValue();
 					c.addFriend(username);

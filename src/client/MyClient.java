@@ -223,7 +223,7 @@ public class MyClient extends Thread {
 	}
 
 	//get day's events
-	private void getDaysEvents(MyDate date) {
+	public void getDaysEvents(MyDate date) {
 		try {
 			GetEvents ge2 = new GetEvents(date, date, user);
 			outputStream.writeObject(ge2);
@@ -307,6 +307,10 @@ public class MyClient extends Thread {
 	
 	public MyDate getCurrDate(){
 		return user.getCurrDate();
+	}
+	
+	public User getCurrUser(){
+		return user;
 	}
 	
 	//GUI functionality
