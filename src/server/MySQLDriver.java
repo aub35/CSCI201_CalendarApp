@@ -51,7 +51,12 @@ public class MySQLDriver {
 	//connect to MySQL
 	public void connect(){	
 		try {
-			con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
+			if (mySQLpass.equals("")){
+				con = DriverManager.getConnection(DB_URL, mySQLuser, null);
+			}
+			else {
+				con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
+			}
 			//con = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (SQLException e) {
 			e.printStackTrace();
