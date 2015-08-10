@@ -191,9 +191,9 @@ public class MyClient extends Thread {
 	
 	//functionality for talking to GUI
 	public void login() {
+		user.setCurrDate(MyDate.getTodaysDate());
 		closeLoginWindow();
 		openMainWindow();
-		user.setCurrDate(MyDate.getTodaysDate());
 		getDaysEvents(user.getCurrDate());
 	}
 	

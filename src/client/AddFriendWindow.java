@@ -9,6 +9,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class AddFriendWindow extends JDialog{
 	MyClient c;
@@ -51,6 +53,15 @@ public class AddFriendWindow extends JDialog{
 	}
 	
 	private void addEventHandlers(){
-		
+		usernameTextField.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent arg0) {  }
+			public void insertUpdate(DocumentEvent arg0) {
+				System.out.println("Something chagned insret");
+			}
+			public void removeUpdate(DocumentEvent arg0) {
+				System.out.println("Something changed remove");
+			}
+			
+		});
 	}
 }
