@@ -213,7 +213,6 @@ public class MyServer {
 		User requestedUser = fr.getRequestedUser();
 		for (User key : connections.keySet()) {
 			if (User.isEqual(requestedUser, key)) {
-				System.out.println("sent a friend request to active connection");
 				ServerClientListener scl = connections.get(key);
 				scl.sendFriendRequest(fr);
 			}

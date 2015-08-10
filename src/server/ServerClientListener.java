@@ -107,4 +107,14 @@ public class ServerClientListener extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendBackFriendRequest(FriendRequest fr) {
+		try {
+			outputStream.writeObject(fr);
+			outputStream.flush();
+			outputStream.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

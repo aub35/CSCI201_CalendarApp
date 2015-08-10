@@ -63,51 +63,50 @@ public class ReceiveData extends Thread {
 	
 	private void ifCheckUser(Object obj) {
 		if (obj instanceof CheckUser) {
-			client.setHaveReceivedLogin(true);
 			checkuser = (CheckUser)obj;
+			client.setHaveReceivedLogin(true);
 		}
 	}
 	
 	private void ifAddUser(Object obj) {
 		if (obj instanceof AddUser) {
-			client.setHaveReceivedUser(true);
 			adduser = (AddUser)obj;  
-			System.out.println("Received add user");
+			client.setHaveReceivedUser(true);
 		}
 	}
 	
 	private void ifAddEvent(Object obj){
 		if (obj instanceof AddEvent) {
-			client.setHaveReceivedAddEvent(true);
 			addevent = (AddEvent)obj;
+			client.setHaveReceivedAddEvent(true);
 		}
 	}
 	
 	private void ifGetEvents(Object obj) {
 		if (obj instanceof GetEvents) {
-			client.setHaveReceivedGetEvents(true);
 			getevents = (GetEvents)obj;
+			client.setHaveReceivedGetEvents(true);
 		}
 	}
 	
 	private void ifSearchFriend(Object obj) {
 		if (obj instanceof SearchFriend) {
-			client.setHaveReceivedSearchFriend(true);
 			searchfriend = (SearchFriend)obj;
+			client.setHaveReceivedSearchFriend(true);
 		}
 	}
 	
 	private void ifAddFriend(Object obj) {
 		if (obj instanceof AddFriend) {
-			client.setHaveReceivedAddFriend(true);
 			addfriend = (AddFriend)obj;
+			client.setHaveReceivedAddFriend(true);
 		}
 	}
 
 	private void ifFriendRequest(Object obj) {
 		if (obj instanceof FriendRequest) {
 			friendrequest = (FriendRequest)obj;
-			System.out.println("Received Friend Request from" + friendrequest.getAdder().getUsername());
+			client.setHaveReceivedFriendRequestConfirmation(true);
 		}
 	}
 	

@@ -242,7 +242,9 @@ public class MyClient extends Thread {
 			outputStream.close();
 			while (!haveReceivedFriendRequestConfirmation) {
 				Thread.sleep(10);;
-			}
+			} 
+			Thread.sleep(10);
+			
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}

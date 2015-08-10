@@ -114,6 +114,7 @@ public class ReceiveData extends Thread {
 		if (obj instanceof FriendRequest) {
 			FriendRequest fr = (FriendRequest)obj;
 			server.sendFriendRequest(fr);
+			scl.sendBackFriendRequest(fr);
 		}
 	}
 }

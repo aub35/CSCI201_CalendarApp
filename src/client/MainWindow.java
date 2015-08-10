@@ -376,7 +376,10 @@ public class MainWindow extends JFrame {
 		repaint();
 	}
 	
-	
+	public void displaySentFriendRequest() {
+		JOptionPane.showConfirmDialog(MainWindow.this, "Sent Friend Request", "Friend Request",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
 	
 	public void displayFriends(User u){
 		friendsTextArea.setText("");
