@@ -31,7 +31,7 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private MyClient c;
-	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton, checkMessageButton;
+	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton, checkRequestButton;
 	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel, leftPanel, infoPanel;
 	JDialog addEventWindow, addFriendWindow;
 	JScrollPane jsp, friendScrollPane;
@@ -39,10 +39,10 @@ public class MainWindow extends JFrame {
 	JLabel [] hourLabels, eventLabels, weekdayLabels;
 	JLabel [] monthDayLabels;
 	JLabel currDateLabel, currUserLabel, modeLabel;
-	JTextArea friendsTextArea;
+	JTextArea friendsTextArea, eventTextArea;
 	MyDate currDate;
 	User currUser;
-	Vector<MyEvent> events;
+	//Vector<MyEvent> events;
 	boolean monthlyMode;
 	JRadioButton dailyRadioButton, monthlyRadioButton;
 	ButtonGroup modeButtonGroup;
@@ -61,7 +61,7 @@ public class MainWindow extends JFrame {
 		createGUI();
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(500, 500);
+		setSize(800, 500);
 		addEventHandlers();
 		displayFriends(currUser);
 	}
@@ -124,7 +124,7 @@ public class MainWindow extends JFrame {
 		centerPanel.add(calPanel);
 		
 				
-		JTextArea eventTextArea = new JTextArea();
+		eventTextArea = new JTextArea();
 		eventTextArea.setRows(10);
 		eventTextArea.setEditable(false);
 		//eventTextArea.setCursor(null);
@@ -153,8 +153,8 @@ public class MainWindow extends JFrame {
 		rightPanel.add(addEventButton);
 		addFriendButton = new JButton("Add Friend");
 		rightPanel.add(addFriendButton);
-		checkMessageButton = new JButton("Check Message");
-		rightPanel.add(checkMessageButton);
+		checkRequestButton = new JButton("Check Friend Request");
+		rightPanel.add(checkRequestButton);
 		logoutButton = new JButton("Log out");
 		rightPanel.add(logoutButton);
 		friendsTextArea = new JTextArea();
@@ -277,11 +277,11 @@ public class MainWindow extends JFrame {
 			monthDayLabels[i].addMouseListener(new LabelClicked(i+1));
 		}
 		
-		checkMessageButton.addActionListener(new ActionListener(){
+		checkRequestButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				//TODO get message
-				String message = null;
-				int selection = JOptionPane.showConfirmDialog(MainWindow.this, message, "Message", JOptionPane.YES_NO_OPTION);
+				String request = null;
+				int selection = JOptionPane.showConfirmDialog(MainWindow.this, request, "Message", JOptionPane.YES_NO_OPTION);
 				switch (selection){
 					case JOptionPane.YES_OPTION:
 						
@@ -405,7 +405,29 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
-/*	
+//	public void displayImportantEvents (){
+//		eventTextArea.setText("");
+//		Vector<MyEvent> events;
+//		if (dailyRadioButton.isSelected()){
+//			events = c.getEvents(currDate);
+//			for (int i=0; i<events.size();i++){
+//				if (events.get(i).isImportant()){
+//					eventTextArea.append(events.get(i).toString());
+//				}
+//			}
+//		}
+//		else{
+//			for (int i=1; i<daysInMonth; i++){
+//				events = c.getEvents(new MyDate(0, 0, i, currDate.getMonth(), currDate.getYear()));
+//				for (int j=0; j<events.size();j++){
+//					if (events.get(j).isImportant()){
+//						eventTextArea.append(events.get(i).toString());
+//					}
+//			}
+//		}
+//	}
+	
+	
 	public static void main (String[] args){
 		
 		MyClient c = new MyClient("localhost", 1111);
@@ -414,7 +436,7 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 		//mainWindow.displayMonth();
 	}
-*/
+
 
 
 }

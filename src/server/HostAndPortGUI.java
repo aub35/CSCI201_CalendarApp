@@ -57,7 +57,7 @@ public class HostAndPortGUI extends JFrame {
 		connectButton = new JButton("Connect");
 		add(connectButton);
 		
-		errorLabel = new JLabel("error message here");
+		errorLabel = new JLabel("");
 		add(errorLabel);
 	}
 	

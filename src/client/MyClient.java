@@ -280,6 +280,34 @@ public class MyClient extends Thread {
 		}
 	}
 	
+	public Vector<MyEvent> getEvents(MyDate date){
+		Vector<MyEvent> events = null;
+		try {
+			GetEvents ge2 = new GetEvents(date, date, user);
+			outputStream.writeObject(ge2);
+			outputStream.flush();
+			outputStream.reset();
+			while (!haveReceivedGetEvents) {
+				Thread.sleep(100);
+			}
+			Thread.sleep(100);
+			GetEvents ge = rd.getevents;
+			if (ge.isSuccessfulGet()) {
+				events = ge.getEvents();
+			} else {
+				System.out.println("Unsuccessful getting events");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		} finally {
+			rd.getevents = null;
+			haveReceivedGetEvents = false;
+		}
+		return events;
+	}
+	
 	//functionality for talking to GUI
 	public void login() {
 		user.setCurrDate(MyDate.getTodaysDate());

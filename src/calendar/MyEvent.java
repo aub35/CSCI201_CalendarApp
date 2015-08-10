@@ -38,4 +38,12 @@ public class MyEvent implements Serializable {
 		return isImportant;
 	}
 	
+	public String toString(){
+		String str = name + "/n";
+		str += "Start:" + start.toString() + "/n";
+		str += "End:"+ end.toString()+"/n";
+		if (location!=null){
+			str+="@" + location;
+		}
+	}
 }
