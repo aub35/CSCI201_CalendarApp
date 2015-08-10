@@ -359,7 +359,7 @@ public class MainWindow extends JFrame {
 		public void mouseClicked(MouseEvent me){
 			currDate = new MyDate(0, 0, day, currDate.getMonth(), currDate.getYear());
 			currDateLabel.setText(currDate.displayDate());
-			//c.getDaysEvents(currDate);
+			c.getDaysEvents(currDate);
 			dailyRadioButton.setSelected(true);
 			monthlyMode = false;
 			displayDaily();
@@ -367,7 +367,7 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
-	
+/*	
 	public static void main (String[] args){
 		
 		MyClient c = new MyClient("localhost", 1111);
@@ -376,6 +376,7 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 		//mainWindow.displayMonth();
 	}
+*/
 
 
 }
