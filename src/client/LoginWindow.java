@@ -33,7 +33,7 @@ public class LoginWindow extends JDialog {
 		setSize(500, 300);
 		setTitle("Login Window");
 
-		setLayout(new GridLayout(4,1));
+		setLayout(new GridLayout(5,1));
 
 		usernamePanel = new JPanel();
 		usernameLabel = new JLabel("Username: ");
@@ -69,10 +69,11 @@ public class LoginWindow extends JDialog {
 		add(buttonPanel);
 		
 		errorPanel = new JPanel();
-		errorLabel = new JLabel("Error Message Here");
+		errorLabel = new JLabel("");
 		errorPanel.add(errorLabel);
 		add(errorPanel);
 	}
+	
 	
 	public void addActionAdapters(){
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -84,7 +85,12 @@ public class LoginWindow extends JDialog {
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				c.setIsGuest(false);
-				c.checkUser(usernameTextField.getText(), passwordTextField.getText());
+				if (c.checkUser(usernameTextField.getText(), passwordTextField.getText())){
+					//Successful login
+				}
+				else {
+					errorLabel.setText("<html><font color=\"red\">Unsuccessful Login</font></html>");
+				}
 			}
 		});
 		

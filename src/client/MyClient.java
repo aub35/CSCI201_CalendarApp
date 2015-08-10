@@ -89,7 +89,8 @@ public class MyClient extends Thread {
 	
 	//functionality for talking to server
 	//checking user for login
-	public void checkUser(String username, String password) {
+	public boolean checkUser(String username, String password) {
+		boolean successfulLogin=false;
 		try {
 			outputStream.writeObject(new CheckUser(username, password));
 			outputStream.flush();
@@ -101,9 +102,10 @@ public class MyClient extends Thread {
 			if (checkuser.doesExist()) {
 				user = checkuser.getUser();
 				login();
+				successfulLogin=true;
 			} else {
 				System.out.println("Unsuccessful login");
-				//add error message
+				successfulLogin=false;
 			}
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
@@ -113,6 +115,7 @@ public class MyClient extends Thread {
 			rd.checkuser = null;
 			haveReceivedLogin = false;
 		}
+		return successfulLogin;
 	}
 	
 	//adding a user
