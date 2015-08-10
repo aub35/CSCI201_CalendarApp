@@ -39,8 +39,8 @@ public class MainWindow extends JFrame {
 	public MainWindow(MyClient c) {
 		this.c = c;
 		//TODO
-		//currDate = c.getCurrDate();
-		currDate = new MyDate(0, 0, 9, 8, 2015);
+		currDate = c.getCurrDate();
+		//currDate = new MyDate(0, 0, 9, 8, 2015);
 		// events
 		
 		monthlyMode = false;
@@ -269,7 +269,7 @@ public class MainWindow extends JFrame {
 
 	
 	
-	
+/*	
 	public static void main (String[] args){
 		
 		MyClient c = new MyClient("localhost", 1111);
@@ -278,5 +278,5 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 		mainWindow.displayMonth();
 	}
-
+*/
 }

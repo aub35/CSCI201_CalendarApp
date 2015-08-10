@@ -238,7 +238,7 @@ public class MyClient extends Thread {
 	}
 	
 	public MyDate getCurrDate(){
-		return currentDate;
+		return user.getCurrDate();
 	}
 	
 	//GUI functionality
