@@ -38,6 +38,10 @@ public class GetEvents implements Serializable {
 		return start;
 	}
 
+	public void setStart(MyDate start) {
+		this.start = start;
+	}
+	
 	public MyDate getEnd() {
 		return end;
 	}

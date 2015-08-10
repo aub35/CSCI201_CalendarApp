@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class MyDate implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private int minute, hour, dayOfMonth, month, year;
 	
 	public MyDate(int minute, int hour, int dayOfMonth,
@@ -36,7 +36,6 @@ public class MyDate implements Serializable {
 		int month = ld.getMonthValue();
 		int day = ld.getDayOfMonth();
 		MyDate d =  new MyDate(minute, hour, day, month, year);
-		System.out.println("Date: " + d);
 		return d;
 	}
 	

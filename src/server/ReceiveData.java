@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import calendar.MyDate;
 import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
@@ -56,6 +57,7 @@ public class ReceiveData extends Thread {
 			AddUser au = (AddUser)obj;
 			server.addUser(au);
 			scl.sendBackAddUser(au);
+			System.out.println("Sent add user");
 		}
 	}
 	
@@ -76,10 +78,11 @@ public class ReceiveData extends Thread {
 			} else {
 				System.out.println(ge.equals(previous));
 			}
-			System.out.println("Server GetEvents date: " + ge.getUser().getCurrDate());
+			MyDate currDate = ge.getStart();
+			System.out.println("Server received date: " + currDate);
 			server.getEvents(ge);
 			scl.sendBackGetEvent(ge);
-			System.out.println("Sent back " + ge); 
+			ge.setStart(currDate);
 		}
 	}
 }

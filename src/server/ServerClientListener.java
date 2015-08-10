@@ -41,6 +41,7 @@ public class ServerClientListener extends Thread {
 		try {
 			outputStream.writeObject(cu);
 			outputStream.flush();
+			outputStream.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
@@ -49,7 +50,8 @@ public class ServerClientListener extends Thread {
 	public void sendBackAddUser(AddUser au) {
 		try {
 			outputStream.writeObject(au);
-			outputStream.flush();			
+			outputStream.flush();		
+			outputStream.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +61,7 @@ public class ServerClientListener extends Thread {
 		try {
 			outputStream.writeObject(ae);
 			outputStream.flush();
+			outputStream.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -68,6 +71,7 @@ public class ServerClientListener extends Thread {
 		try {
 			outputStream.writeObject(ge);
 			outputStream.flush();
+			outputStream.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

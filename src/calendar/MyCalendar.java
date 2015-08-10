@@ -71,19 +71,20 @@ class DateComp implements Comparator<MyDate> {
 			if (d1.getYear() == d2.getYear()) {
 				//if they have the same month
 				if (d1.getMonth() == d2.getMonth()) {
+					return (d1.getDayOfMonth() - d2.getDayOfMonth());
 					//if they have the same day
-					if (d1.getDayOfMonth() == d2.getDayOfMonth()) {
+/*					if (d1.getDayOfMonth() == d2.getDayOfMonth()) {
 						int e1Hour = d1.getHour();
 						int e2Hour = d2.getHour();
 						//if they have the same hour
 						if(e1Hour == e2Hour) {
 							return (d1.getMinute() - d2.getMinute());
 						} else { // the dates have differing hours
-							return (e1Hour - e2Hour);
+							return (e2Hour - e1Hour);
 						}
 					} else { // the dates have differing days
 						return (d1.getDayOfMonth() - d2.getDayOfMonth());
-					}
+					}*/
 				} else { //the dates have differing months
 					return (d1.getMonth() - d2.getMonth());
 				}
