@@ -7,6 +7,7 @@ import resources.AddEvent;
 import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
+import resources.FriendRequest;
 import resources.GetEvents;
 import resources.SearchFriend;
 
@@ -22,6 +23,7 @@ public class ReceiveData extends Thread {
 	GetEvents getevents;
 	SearchFriend searchfriend;
 	AddFriend addfriend;
+	FriendRequest friendrequest;
 	
 	ReceiveData(ObjectInputStream inputStream, MyClient client) {
 		this.inputStream = inputStream;
@@ -49,6 +51,7 @@ public class ReceiveData extends Thread {
 				ifGetEvents(obj);
 				ifSearchFriend(obj);
 				ifAddFriend(obj);
+				ifFriendRequest(obj);
 				
 				if (isQuit) { break; }
 				Thread.sleep(10);
@@ -98,6 +101,13 @@ public class ReceiveData extends Thread {
 		if (obj instanceof AddFriend) {
 			client.setHaveReceivedAddFriend(true);
 			addfriend = (AddFriend)obj;
+		}
+	}
+
+	private void ifFriendRequest(Object obj) {
+		if (obj instanceof FriendRequest) {
+			friendrequest = (FriendRequest)obj;
+			System.out.println("Received Friend Request from" + friendrequest.getAdder().getUsername());
 		}
 	}
 	
