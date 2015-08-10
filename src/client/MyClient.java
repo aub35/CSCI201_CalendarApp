@@ -10,6 +10,7 @@ import calendar.MyDate;
 import calendar.MyEvent;
 import calendar.User;
 import resources.AddEvent;
+import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
@@ -31,7 +32,7 @@ public class MyClient extends Thread {
 
 	private boolean isGuest;
 	private boolean haveReceivedLogin, haveReceivedUser, haveReceivedAddEvent,
-	haveReceivedGetEvents, haveReceivedSearchFriend = false;
+	haveReceivedGetEvents, haveReceivedSearchFriend, haveReceivedAddFriend = false;
 	private User user;
 	
 	//constructor
@@ -69,6 +70,10 @@ public class MyClient extends Thread {
 	
 	public void setHaveReceivedSearchFriend(boolean haveReceivedSearchFriend) {
 		this.haveReceivedSearchFriend = haveReceivedSearchFriend;
+	}
+
+	public void setHaveReceivedAddFriend(boolean haveReceivedAddFriend) {
+		this.haveReceivedAddFriend = haveReceivedAddFriend;
 	}
 	
 	public String getUsername() {
@@ -190,6 +195,30 @@ public class MyClient extends Thread {
 			rd.searchfriend = null;
 			haveReceivedSearchFriend = false;
 			return result;
+		}
+	}
+	
+	public void addFriend(String username) {
+		try {
+			outputStream.writeObject(new AddFriend(username));
+			outputStream.flush();
+			outputStream.reset();
+			while (!haveReceivedAddFriend) {
+				Thread.sleep(10);
+			}
+			Thread.sleep(10);
+			AddFriend af = rd.addfriend;
+			if(af.isSuccessfulAdd()) {
+				user.addFriend(af.getUser());
+				System.out.println("Added " + af.getUser().getUsername());
+			} else {
+				System.out.println("Unsuccessful add");
+			}
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			rd.addfriend = null;
+			haveReceivedAddFriend = false;			
 		}
 	}
 

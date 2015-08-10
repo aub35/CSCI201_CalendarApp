@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import calendar.User;
 import resources.AddEvent;
+import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
@@ -164,6 +165,16 @@ public class MyServer {
 		sf.setSuccesfulSearch(true);
 	}
 
+	public void addFriend(AddFriend af) {
+		String toSearch = af.getUsername();
+		for (User key : userMap.keySet()) {
+			if (key.getUsername().equals(toSearch)) {
+				af.setUser(key);
+				af.setSuccessfulAdd(true);
+			}
+		}
+	}
+	
 	public void quitUser(User u) {
 		if (u.isGuest()) {
 			for (User key : guestUserMap.keySet()) {

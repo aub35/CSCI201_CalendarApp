@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import resources.AddEvent;
+import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
@@ -20,6 +21,7 @@ public class ReceiveData extends Thread {
 	AddEvent addevent;
 	GetEvents getevents;
 	SearchFriend searchfriend;
+	AddFriend addfriend;
 	
 	ReceiveData(ObjectInputStream inputStream, MyClient client) {
 		this.inputStream = inputStream;
@@ -46,6 +48,7 @@ public class ReceiveData extends Thread {
 				ifAddEvent(obj);
 				ifGetEvents(obj);
 				ifSearchFriend(obj);
+				ifAddFriend(obj);
 				
 				if (isQuit) { break; }
 				Thread.sleep(10);
@@ -88,6 +91,13 @@ public class ReceiveData extends Thread {
 		if (obj instanceof SearchFriend) {
 			client.setHaveReceivedSearchFriend(true);
 			searchfriend = (SearchFriend)obj;
+		}
+	}
+	
+	private void ifAddFriend(Object obj) {
+		if (obj instanceof AddFriend) {
+			client.setHaveReceivedAddFriend(true);
+			addfriend = (AddFriend)obj;
 		}
 	}
 	

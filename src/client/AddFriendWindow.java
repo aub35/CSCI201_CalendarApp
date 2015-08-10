@@ -14,6 +14,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -60,6 +61,7 @@ public class AddFriendWindow extends JDialog {
 		
 		dlm = new DefaultListModel<String>();
 		usernameList = new JList<String>(dlm);
+		usernameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane jsp = new JScrollPane(usernameList);
 		jsp.setPreferredSize(new Dimension(500, 250));
 		add(jsp);
@@ -87,7 +89,13 @@ public class AddFriendWindow extends JDialog {
 		
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				if (usernameList.isSelectionEmpty()) {
+					errorLabel.setText("No user selected! Please select one from list above");
+				} else {
+					String username = usernameList.getSelectedValue();
+					c.addFriend(username);
+					AddFriendWindow.this.dispose();
+				}
 			}
 		});
 		

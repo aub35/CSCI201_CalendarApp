@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import resources.AddEvent;
+import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
@@ -27,8 +28,6 @@ public class ServerClientListener extends Thread {
 		try {
 			//get output stream
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
-			SendData sd = new SendData(outputStream, server);
-			sd.start();
 			//get input stream
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			ReceiveData rd = new ReceiveData(inputStream, server, this);
@@ -81,6 +80,16 @@ public class ServerClientListener extends Thread {
 	public void sendBackSearchFriend(SearchFriend sf) {
 		try {
 			outputStream.writeObject(sf);
+			outputStream.flush();
+			outputStream.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendBackAddFriend(AddFriend af) {
+		try {
+			outputStream.writeObject(af);
 			outputStream.flush();
 			outputStream.reset();
 		} catch (IOException e) {
