@@ -14,6 +14,7 @@ import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
 import resources.SearchFriend;
+import trie.MyTrie;
 import calendar.MyCalendar;
 import calendar.MyDate;
 import calendar.MyEvent;
@@ -30,6 +31,7 @@ public class MyServer {
 	
 	private Map<User, MyCalendar> userMap;
 	private Map<User, MyCalendar> guestUserMap;
+	private MyTrie usernameList;
 	int guestIndex = 0;
 	 
 	public MyServer(int port) {
@@ -38,6 +40,7 @@ public class MyServer {
 		try {
 			userMap = new HashMap<User, MyCalendar>();
 			guestUserMap = new HashMap<User, MyCalendar>();
+			usernameList = new MyTrie();
 			ss = new ServerSocket(port);
 			sl = new ServerListener(ss, this);
 			sl.start();
@@ -78,6 +81,7 @@ public class MyServer {
 			}
 			u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
 			userMap.put(u, c);
+			usernameList.add(au.getUsername());
 		} else {
 			u = new User("Guest", "", "Guest", true);
 			u.setGuestIndex(guestIndex);
@@ -154,7 +158,10 @@ public class MyServer {
 	}
 	
 	public void searchForFriend(SearchFriend sf) {
-		
+		String toSearch = sf.getUsername();
+		Vector<String> result = usernameList.findUsernames(toSearch);
+		sf.setUsernameList(result);
+		sf.setSuccesfulSearch(true);
 	}
 
 	public void quitUser(User u) {
@@ -162,7 +169,6 @@ public class MyServer {
 			for (User key : guestUserMap.keySet()) {
 				if (User.isGuestEqual(key, u)) {
 					guestUserMap.remove(key);
-					System.out.println("Size of Guest map: " + guestUserMap.size());
 				}
 			}
 		}

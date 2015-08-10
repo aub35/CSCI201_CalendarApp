@@ -5,6 +5,7 @@ import java.util.Vector;
 public class MyTrie {
 
 	private MyTrieNode root;
+	private Vector<String> result;
 	
 	public MyTrie() {
 		root = new MyTrieNode((char)0);
@@ -23,9 +24,12 @@ public class MyTrie {
 			boolean foundChild = false;
 			for (int i = 0; i < children.size(); i++) {
 				if (children.elementAt(i).getValue() == letter) {
-					System.out.println("Found value " + letter + " in trie.");
 					charIndex++;
 					next = next.getChildAt(i);
+					if (charIndex == username.length()) { 
+						next.setEnd(true);
+						return;
+					}
 					letter = username.charAt(charIndex);
 					foundChild = true;
 				}
@@ -51,46 +55,84 @@ public class MyTrie {
 			Vector<MyTrieNode> children = next.getChildren();
 			char letter = username.charAt(charIndex);
 			boolean foundChild = false;
-			System.out.print("Children for " + next.getValue() + " are: ");
 			for (int i = 0; i < children.size(); i++) {
-				System.out.print(children.elementAt(i).getValue() + " (" + children.elementAt(i).isLeaf() + ") ");
 				if (children.elementAt(i).getValue() == letter) {
 					next = next.getChildAt(i);
 					charIndex++;
 					if (charIndex == username.length()) {
 						if (next.isEnd()) {
-							System.out.println();
 							return true;
 						} else {
-							System.out.println();
 							return false;
 						}
 					}
 					foundChild = true;
 				}
 			}
-			System.out.println();
 			if (!foundChild) {
-				System.out.println("Couldn't find matching child");
 				return false; 
 			}
-		}
-		if (charIndex == (username.length() - 1)) { 
-			return true; 
 		}
 		return false;
 	}
 	
-	public static void main (String[] args) {
-		MyTrie mt = new MyTrie();
-		mt.add("Amy");
-		mt.add("Amys");
-		mt.add("Bob");
-		mt.add("Amysie");
-		mt.add("Bobert");
-		System.out.println(mt.find("Amy"));
-		System.out.println(mt.find("Bobe"));
-		System.out.println(mt.find("Bob"));
+	public Vector<String> findUsernames(String username) {
+		MyTrieNode next = root;
+		int charIndex = 0;
+		result = new Vector<String>();
+		String newUsername = "";
+		//add case for first one
+		
+		while (!next.isLeaf()) {
+			Vector<MyTrieNode> children = next.getChildren();
+			char letter = username.charAt(charIndex);
+			newUsername += letter;
+			boolean foundChild = false;
+			boolean reachedEnd = false;
+			for (int i = 0; i < children.size(); i++) {
+				if (children.elementAt(i).getValue() == letter) {
+					foundChild = true;
+					next = next.getChildAt(i);
+					charIndex++;
+					if (charIndex == username.length()) {
+						if (next.isEnd()) {
+							result.add(newUsername);							
+						}
+						reachedEnd = true;
+					}
+				}
+			}
+			if (!foundChild) {
+				return result; 
+			}
+			if (reachedEnd) { break; }
+		}
+		while (!username.equals(newUsername)) {
+			char letter = username.charAt(charIndex);
+			newUsername += letter;
+		}
+		
+		searchTrie(next, newUsername);
+		return result;
 	}
 	
+	private void searchTrie(MyTrieNode next, String newUsername) {
+		if (next.isLeaf()) {
+			if (next.isEnd()) {
+				return;
+			}
+		} else {
+			Vector<MyTrieNode> children = next.getChildren();
+			for (int i = 0; i < children.size(); i++) {
+				String name = newUsername + next.getChildAt(i).getValue();
+				if (next.getChildAt(i).isEnd()) {
+					result.add(name);
+				}
+				searchTrie(next.getChildAt(i), name);
+			}
+		}
+		
+		
+	}
+
 }

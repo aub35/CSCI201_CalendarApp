@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -28,6 +27,8 @@ import calendar.MyEvent;
 import calendar.User;
 
 public class MainWindow extends JFrame {
+
+	private static final long serialVersionUID = 1L;
 	private MyClient c;
 	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton;
 	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel, leftPanel, infoPanel;
@@ -215,13 +216,13 @@ public class MainWindow extends JFrame {
 		
 		addEventButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				addEventWindow = new AddEventWindow(c);				
+				new AddEventWindow(c);	
 			}
 		});
 		
 		addFriendButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				addFriendWindow = new AddFriendWindow(c);
+				new AddFriendWindow(c);
 			}
 		});
 		
@@ -296,7 +297,7 @@ public class MainWindow extends JFrame {
 	
 	private void configureMonthLabels(int month, int year){
 		MyDate firstDayOfMonth = new MyDate(0, 0, 1, month, year);
-		int first = firstDayOfMonth.getDayOfWeek(firstDayOfMonth);
+		int first = MyDate.getDayOfWeek(firstDayOfMonth);
 		
 		if (first==7){
 			first = 0;
@@ -310,10 +311,10 @@ public class MainWindow extends JFrame {
 			monthPanel.add(label);
 		}
 		
-		if (firstDayOfMonth.isEndOfMonth(month, 28)){
+		if (MyDate.isEndOfMonth(month, 28)){
 			daysInMonth = 28;
 		}
-		else if (firstDayOfMonth.isEndOfMonth(month, 30)){
+		else if (MyDate.isEndOfMonth(month, 30)){
 			daysInMonth = 30;
 		}
 		else {
@@ -358,8 +359,8 @@ public class MainWindow extends JFrame {
 		}
 		public void mouseClicked(MouseEvent me){
 			currDate = new MyDate(0, 0, day, currDate.getMonth(), currDate.getYear());
+			c.dayClicked(currDate);
 			currDateLabel.setText(currDate.displayDate());
-			c.getDaysEvents(currDate);
 			dailyRadioButton.setSelected(true);
 			monthlyMode = false;
 			displayDaily();

@@ -2,13 +2,12 @@ package server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
-import calendar.MyDate;
 import calendar.User;
 import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
+import resources.SearchFriend;
 
 public class ReceiveData extends Thread {
 
@@ -33,6 +32,7 @@ public class ReceiveData extends Thread {
 				ifAddUser(obj);
 				ifAddEvent(obj);
 				ifGetEvents(obj);
+				ifSearchFriend(obj);
 				ifQuitUser(obj);
 				
 			} catch (IOException | ClassNotFoundException e) {
@@ -82,6 +82,14 @@ public class ReceiveData extends Thread {
 		if (obj instanceof User) {
 			User u = (User)obj;
 			server.quitUser(u);
+		}
+	}
+	
+	private void ifSearchFriend(Object obj) {
+		if (obj instanceof SearchFriend) {
+			SearchFriend sf = (SearchFriend)obj;
+			server.searchForFriend(sf);
+			scl.sendBackSearchFriend(sf);
 		}
 	}
 }

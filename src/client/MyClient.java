@@ -13,6 +13,7 @@ import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
+import resources.SearchFriend;
 
 //protocol should be to send username, password & check if there is a matching one in server database
 //TODO: login screen GUI
@@ -27,10 +28,10 @@ public class MyClient extends Thread {
 	
 	private static MainWindow mainwindow;
 	private static LoginWindow loginwindow;
-	
+
 	private boolean isGuest;
 	private boolean haveReceivedLogin, haveReceivedUser, haveReceivedAddEvent,
-	haveReceivedGetEvents = false;
+	haveReceivedGetEvents, haveReceivedSearchFriend = false;
 	private User user;
 	
 	//constructor
@@ -64,6 +65,14 @@ public class MyClient extends Thread {
 	
 	public void setIsGuest(boolean isGuest) {
 		this.isGuest = isGuest;
+	}
+	
+	public void setHaveReceivedSearchFriend(boolean haveReceivedSearchFriend) {
+		this.haveReceivedSearchFriend = haveReceivedSearchFriend;
+	}
+	
+	public String getUsername() {
+		return user.getUsername();
 	}
 	
 	//run method
@@ -158,8 +167,34 @@ public class MyClient extends Thread {
 		}
 	}
 	
+	@SuppressWarnings("finally")
+	public Vector<String> searchForFriend(String username) {
+		Vector<String> result = new Vector<String>();
+		try {
+			outputStream.writeObject(new SearchFriend(username, user));
+			outputStream.flush();
+			outputStream.reset();
+			while (!haveReceivedSearchFriend) {
+				Thread.sleep(100);
+			}
+			Thread.sleep(10);
+			SearchFriend sf = rd.searchfriend;
+			if (sf.isSuccesfulSearch()) {
+				result = sf.getUsernameList();
+			} else {
+				System.out.println("Failed to get Friends list");
+			}
+		} catch (IOException | InterruptedException ie) {
+			ie.printStackTrace();
+		} finally {
+			rd.searchfriend = null;
+			haveReceivedSearchFriend = false;
+			return result;
+		}
+	}
+
 	//get day's events
-	public void getDaysEvents(MyDate date) {
+	private void getDaysEvents(MyDate date) {
 		try {
 			GetEvents ge2 = new GetEvents(date, date, user);
 			outputStream.writeObject(ge2);
@@ -172,6 +207,7 @@ public class MyClient extends Thread {
 			Thread.sleep(100);
 			GetEvents ge = rd.getevents;
 			if (ge.isSuccessfulGet()) {
+				System.out.println("Got events on " + ge.getUser().getCurrDate());
 				Vector<MyEvent> events = ge.getEvents();
 				for (int i = 0; i < events.size(); i++) {
 					mainwindow.displayEvent(events.get(i));
@@ -211,6 +247,11 @@ public class MyClient extends Thread {
 			}
 		}
 		user = null;
+	}
+	
+	public void dayClicked(MyDate currentDate) {
+		user.setCurrDate(currentDate);
+		getDaysEvents(user.getCurrDate());
 	}
 	
 	public void nextDay() {

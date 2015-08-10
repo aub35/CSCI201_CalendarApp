@@ -9,6 +9,7 @@ import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
+import resources.SearchFriend;
 
 public class ServerClientListener extends Thread {
 
@@ -70,6 +71,16 @@ public class ServerClientListener extends Thread {
 	public void sendBackGetEvent(GetEvents ge) {
 		try {
 			outputStream.writeObject(ge);
+			outputStream.flush();
+			outputStream.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendBackSearchFriend(SearchFriend sf) {
+		try {
+			outputStream.writeObject(sf);
 			outputStream.flush();
 			outputStream.reset();
 		} catch (IOException e) {

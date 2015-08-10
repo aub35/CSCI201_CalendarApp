@@ -1,23 +1,33 @@
 package client;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class AddFriendWindow extends JDialog{
+public class AddFriendWindow extends JDialog {
+
+	private static final long serialVersionUID = 1L;
 	MyClient c;
 	JPanel usernamePanel, buttonPanel;
 	JLabel usernameLabel, errorLabel;
 	JTextField usernameTextField;
-	JButton searchButton;
+	JList<String> usernameList;
+	DefaultListModel<String> dlm;
+	String[] usernames;
+	JButton addButton;
 	
 	public AddFriendWindow(MyClient c){
 		this.c = c;
@@ -30,9 +40,9 @@ public class AddFriendWindow extends JDialog{
 	
 	public void createGUI(){
 		setTitle("Add Friend Window");
-		setSize(400, 150);
+		setSize(500, 250);
 		
-		setLayout(new GridLayout(3,1));
+		setLayout(new GridLayout(4,1));
 		
 		usernamePanel = new JPanel();
 		usernameLabel = new JLabel("Username: ");
@@ -44,9 +54,15 @@ public class AddFriendWindow extends JDialog{
 
 		
 		buttonPanel = new JPanel();
-		searchButton = new JButton("Search Friend");
-		buttonPanel.add(searchButton);
+		addButton = new JButton("Add Friend");
+		buttonPanel.add(addButton);
 		add(buttonPanel);
+		
+		dlm = new DefaultListModel<String>();
+		usernameList = new JList<String>(dlm);
+		JScrollPane jsp = new JScrollPane(usernameList);
+		jsp.setPreferredSize(new Dimension(500, 250));
+		add(jsp);
 		
 		errorLabel = new JLabel("error message here");
 		add(errorLabel);
@@ -56,12 +72,39 @@ public class AddFriendWindow extends JDialog{
 		usernameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent arg0) {  }
 			public void insertUpdate(DocumentEvent arg0) {
-				System.out.println("Something chagned insret");
+				Vector<String> result = c.searchForFriend(usernameTextField.getText());
+				updateUsernameList(result);				
 			}
 			public void removeUpdate(DocumentEvent arg0) {
-				System.out.println("Something changed remove");
+				if (!usernameTextField.getText().isEmpty()) {
+					Vector<String> result = c.searchForFriend(usernameTextField.getText());
+					updateUsernameList(result);
+				} else {
+					dlm.clear();
+				}
 			}
-			
 		});
+		
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		
+		
 	}
+	
+	public void updateUsernameList(Vector<String> usernames) {
+		dlm.clear();
+		String myUsername = c.getUsername();
+		for (int i = 0; i < usernames.size(); i++) {
+			String str = usernames.elementAt(i);
+			if (!str.equals(myUsername)) {
+				dlm.addElement(str);				
+			}
+		}
+	}
+	
+
+	
 }

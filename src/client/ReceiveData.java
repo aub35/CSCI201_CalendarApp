@@ -7,6 +7,7 @@ import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
+import resources.SearchFriend;
 
 public class ReceiveData extends Thread {
 
@@ -18,6 +19,7 @@ public class ReceiveData extends Thread {
 	AddUser adduser;
 	AddEvent addevent;
 	GetEvents getevents;
+	SearchFriend searchfriend;
 	
 	ReceiveData(ObjectInputStream inputStream, MyClient client) {
 		this.inputStream = inputStream;
@@ -43,6 +45,7 @@ public class ReceiveData extends Thread {
 				ifAddUser(obj);
 				ifAddEvent(obj);
 				ifGetEvents(obj);
+				ifSearchFriend(obj);
 				
 				if (isQuit) { break; }
 				Thread.sleep(10);
@@ -81,5 +84,11 @@ public class ReceiveData extends Thread {
 		}
 	}
 	
+	private void ifSearchFriend(Object obj) {
+		if (obj instanceof SearchFriend) {
+			client.setHaveReceivedSearchFriend(true);
+			searchfriend = (SearchFriend)obj;
+		}
+	}
 	
 }
