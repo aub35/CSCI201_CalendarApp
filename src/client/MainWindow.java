@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -30,7 +31,7 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private MyClient c;
-	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton;
+	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton, checkMessageButton;
 	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel, leftPanel, infoPanel;
 	JDialog addEventWindow, addFriendWindow;
 	JScrollPane jsp, friendScrollPane;
@@ -149,6 +150,8 @@ public class MainWindow extends JFrame {
 		rightPanel.add(addEventButton);
 		addFriendButton = new JButton("Add Friend");
 		rightPanel.add(addFriendButton);
+		checkMessageButton = new JButton("Check Message");
+		rightPanel.add(checkMessageButton);
 		logoutButton = new JButton("Log out");
 		rightPanel.add(logoutButton);
 		friendsTextArea = new JTextArea();
@@ -271,6 +274,22 @@ public class MainWindow extends JFrame {
 			monthDayLabels[i].addMouseListener(new LabelClicked(i+1));
 		}
 		
+		checkMessageButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				//TODO get message
+				String message = null;
+				int selection = JOptionPane.showConfirmDialog(MainWindow.this, message, "Message", JOptionPane.YES_NO_OPTION);
+				switch (selection){
+					case JOptionPane.YES_OPTION:
+						break;
+					case JOptionPane.NO_OPTION:
+						break;
+					case JOptionPane.CLOSED_OPTION:
+						break;
+				}
+			}
+		});
+		
 		
 	}
 	
@@ -368,7 +387,7 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
-/*	
+	
 	public static void main (String[] args){
 		
 		MyClient c = new MyClient("localhost", 1111);
@@ -377,7 +396,7 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 		//mainWindow.displayMonth();
 	}
-*/
+
 
 
 }
