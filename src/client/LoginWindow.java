@@ -84,6 +84,15 @@ public class LoginWindow extends JDialog {
 		});
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
+				if (usernameTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Username Field is Empty <br /> Please Input Username</font></html>");
+					return;
+				}
+				if (passwordTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Password Field is Empty <br /> Please Input Password </font></html>");
+					return;
+				}
+				
 				c.setIsGuest(false);
 				if (c.checkUser(usernameTextField.getText(), passwordTextField.getText())){
 					//Successful login
@@ -96,6 +105,14 @@ public class LoginWindow extends JDialog {
 		
 		createUserButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
+				if (usernameTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Username Field is Empty <br /> Please Input Username</font></html>");
+					return;
+				}
+				if (passwordTextField.getText().isEmpty()){
+					errorLabel.setText("<html><font color=\"red\"> Password Field is Empty <br /> Please Input Password </font></html>");
+					return;
+				}
 				c.addUser(usernameTextField.getText(), passwordTextField.getText(), 
 						nameTextField.getText());
 			}

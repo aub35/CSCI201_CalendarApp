@@ -63,6 +63,7 @@ public class MainWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 500);
 		addEventHandlers();
+		displayFriends(currUser);
 	}
 	
 	private void createGUI(){
@@ -375,8 +376,14 @@ public class MainWindow extends JFrame {
 		repaint();
 	}
 	
-	public void displayFriend(User u){
-		friendsTextArea.append(u.getName() + "\n" + u.getUsername() + "\n");
+	
+	
+	public void displayFriends(User u){
+		friendsTextArea.setText("");
+		Vector<User> friends = currUser.getFriends();
+		for (int i=0; i<friends.size(); i++){
+			friendsTextArea.append(friends.get(i).getUsername());
+		}
 	}
 	
 	class LabelClicked extends MouseAdapter{

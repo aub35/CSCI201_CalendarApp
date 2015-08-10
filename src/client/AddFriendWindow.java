@@ -66,7 +66,7 @@ public class AddFriendWindow extends JDialog {
 		jsp.setPreferredSize(new Dimension(500, 250));
 		add(jsp);
 		
-		errorLabel = new JLabel("error message here");
+		errorLabel = new JLabel("");
 		add(errorLabel);
 	}
 	
