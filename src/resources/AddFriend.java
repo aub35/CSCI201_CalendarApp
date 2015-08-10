@@ -9,10 +9,12 @@ public class AddFriend implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String username;
 	private boolean isSuccessfulAdd;
-	private User friend;
+	private User adder;
+	private User requestedUser;
 	
-	public AddFriend(String username) {
+	public AddFriend(String username, User adder) {
 		this.username = username;
+		this.adder = adder;
 		this.isSuccessfulAdd = false;
 	}
 
@@ -28,11 +30,21 @@ public class AddFriend implements Serializable {
 		return username;
 	}
 	
-	public void setUser(User u) {
-		this.friend = u;
+	public void setAdder(User u) {
+		this.adder = u;
 	}
 	
-	public User getUser() {
-		return friend;
+	public User getAdder() {
+		return adder;
 	}
+
+	public User getRequestedUser() {
+		return requestedUser;
+	}
+
+	public void setRequestedUser(User requestedUser) {
+		this.requestedUser = requestedUser;
+	}
+	
+	
 }

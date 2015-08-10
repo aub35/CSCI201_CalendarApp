@@ -13,6 +13,7 @@ import resources.AddEvent;
 import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
+import resources.FriendRequest;
 import resources.GetEvents;
 import resources.SearchFriend;
 
@@ -32,7 +33,8 @@ public class MyClient extends Thread {
 
 	private boolean isGuest;
 	private boolean haveReceivedLogin, haveReceivedUser, haveReceivedAddEvent,
-	haveReceivedGetEvents, haveReceivedSearchFriend, haveReceivedAddFriend = false;
+	haveReceivedGetEvents, haveReceivedSearchFriend, haveReceivedAddFriend,
+	haveReceivedFriendRequestConfirmation = false;
 	private User user;
 	
 	//constructor
@@ -64,6 +66,10 @@ public class MyClient extends Thread {
 		this.haveReceivedGetEvents = haveReceivedGetEvents;
 	}
 	
+	public void setHaveReceivedFriendRequestConfirmation(boolean haveReceivedFriendRequestConfirmation) {
+		this.haveReceivedFriendRequestConfirmation = haveReceivedFriendRequestConfirmation;
+	}
+
 	public void setIsGuest(boolean isGuest) {
 		this.isGuest = isGuest;
 	}
@@ -84,7 +90,6 @@ public class MyClient extends Thread {
 	public void run() {
 		rd = new ReceiveData(inputStream, this);
 		rd.start();
-		System.out.println("Reached end of client thread");
 	}
 	
 	//functionality for talking to server
@@ -101,6 +106,10 @@ public class MyClient extends Thread {
 			CheckUser checkuser = rd.checkuser;
 			if (checkuser.doesExist()) {
 				user = checkuser.getUser();
+				Vector<User> friendRequests = user.getFriendRequests();
+				for (int i = 0; i < friendRequests.size(); i++) {
+					System.out.println(friendRequests.elementAt(i).getUsername());
+				}
 				login();
 				successfulLogin=true;
 			} else {
@@ -203,7 +212,7 @@ public class MyClient extends Thread {
 	
 	public void addFriend(String username) {
 		try {
-			outputStream.writeObject(new AddFriend(username));
+			outputStream.writeObject(new AddFriend(username, user));
 			outputStream.flush();
 			outputStream.reset();
 			while (!haveReceivedAddFriend) {
@@ -212,8 +221,8 @@ public class MyClient extends Thread {
 			Thread.sleep(10);
 			AddFriend af = rd.addfriend;
 			if(af.isSuccessfulAdd()) {
-				user.addFriend(af.getUser());
-				System.out.println("Added " + af.getUser().getUsername());
+				sendFriendRequest(af);
+				System.out.println("Sent friend request");
 			} else {
 				System.out.println("Unsuccessful add");
 			}
@@ -222,6 +231,20 @@ public class MyClient extends Thread {
 		} finally {
 			rd.addfriend = null;
 			haveReceivedAddFriend = false;			
+		}
+	}
+	
+	//send friend request
+	private void sendFriendRequest(AddFriend af) {
+		try {
+			outputStream.writeObject(new FriendRequest(af.getAdder(), af.getRequestedUser()));
+			outputStream.flush();
+			outputStream.close();
+			while (!haveReceivedFriendRequestConfirmation) {
+				Thread.sleep(10);;
+			}
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -235,11 +258,9 @@ public class MyClient extends Thread {
 			while (!haveReceivedGetEvents) {
 				Thread.sleep(100);
 			}
-			System.out.println("Received getEvents");
 			Thread.sleep(100);
 			GetEvents ge = rd.getevents;
 			if (ge.isSuccessfulGet()) {
-				System.out.println("Got events on " + ge.getUser().getCurrDate());
 				Vector<MyEvent> events = ge.getEvents();
 				for (int i = 0; i < events.size(); i++) {
 					mainwindow.displayEvent(events.get(i));
@@ -268,15 +289,12 @@ public class MyClient extends Thread {
 	public void logout() {
 		closeMainWindow();
 		openLoginWindow();
-		if (user.isGuest()) {
-			System.out.println("User is a guest");
-			try {
-				outputStream.writeObject(user);
-				outputStream.flush();
-				outputStream.reset();
-			} catch(IOException ie) {
-				ie.printStackTrace();
-			}
+		try {
+			outputStream.writeObject(user);
+			outputStream.flush();
+			outputStream.reset();
+		} catch(IOException ie) {
+			ie.printStackTrace();
 		}
 		user = null;
 	}

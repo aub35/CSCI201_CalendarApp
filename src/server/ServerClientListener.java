@@ -9,6 +9,7 @@ import resources.AddEvent;
 import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
+import resources.FriendRequest;
 import resources.GetEvents;
 import resources.SearchFriend;
 
@@ -90,6 +91,16 @@ public class ServerClientListener extends Thread {
 	public void sendBackAddFriend(AddFriend af) {
 		try {
 			outputStream.writeObject(af);
+			outputStream.flush();
+			outputStream.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendFriendRequest(FriendRequest fr) {
+		try {
+			outputStream.writeObject(fr);
 			outputStream.flush();
 			outputStream.reset();
 		} catch (IOException e) {

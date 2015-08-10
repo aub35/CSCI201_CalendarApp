@@ -36,7 +36,6 @@ public class MyCalendar implements Serializable {
 	}
 	
 	public Vector<MyEvent> getDaysEvent(MyDate date) {
-		System.out.println("Date To Compare: " + date);
 		Vector<MyEvent> result = new Vector<MyEvent>();
 		if (events.size() == 0) {
 			return result;

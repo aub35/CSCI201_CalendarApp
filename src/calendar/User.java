@@ -12,6 +12,7 @@ public class User implements Serializable {
 	private String username, password, name;
 	private boolean isGuest;
 	private Vector<User> friends;
+	private Vector<User> friendRequests;
 	private MyDate currDate;
 	private int guestIndex;
 	
@@ -29,6 +30,7 @@ public class User implements Serializable {
 		this.name = name;
 		this.isGuest = isGuest;
 		friends = new Vector<User>();
+		friendRequests = new Vector<User>();
 	}
 
 	public static boolean isEqual(User u1, User u2) {
@@ -75,5 +77,13 @@ public class User implements Serializable {
 
 	public void setCurrDate(MyDate currDate) {
 		this.currDate = currDate;
+	}
+	
+	public Vector<User> getFriendRequests() {
+		return friendRequests;
+	}
+	
+	public void addFriendRequest(User u) {
+		friendRequests.add(u);
 	}
 }

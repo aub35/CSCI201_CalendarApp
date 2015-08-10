@@ -13,6 +13,7 @@ import resources.AddEvent;
 import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
+import resources.FriendRequest;
 import resources.GetEvents;
 import resources.SearchFriend;
 import trie.MyTrie;
@@ -32,6 +33,7 @@ public class MyServer {
 	
 	private Map<User, MyCalendar> userMap;
 	private Map<User, MyCalendar> guestUserMap;
+	private Map<User, ServerClientListener> connections;
 	private MyTrie usernameList;
 	int guestIndex = 0;
 	 
@@ -41,6 +43,7 @@ public class MyServer {
 		try {
 			userMap = new HashMap<User, MyCalendar>();
 			guestUserMap = new HashMap<User, MyCalendar>();
+			connections = new HashMap<User, ServerClientListener>();
 			usernameList = new MyTrie();
 			ss = new ServerSocket(port);
 			sl = new ServerListener(ss, this);
@@ -69,6 +72,11 @@ public class MyServer {
 		}
 	}
 	
+	public void addConnection(User u, ServerClientListener scl) {
+		System.out.println("Added user : " + u.getUsername());
+		connections.put(u, scl);
+	}
+		
 	public void addUser(AddUser au) {
 		String username = au.getUsername();
 		User u;
@@ -167,10 +175,24 @@ public class MyServer {
 
 	public void addFriend(AddFriend af) {
 		String toSearch = af.getUsername();
+		User adder = af.getAdder();
 		for (User key : userMap.keySet()) {
 			if (key.getUsername().equals(toSearch)) {
-				af.setUser(key);
+				af.setAdder(adder);
+				af.setRequestedUser(key);
+				key.addFriendRequest(adder);
 				af.setSuccessfulAdd(true);
+			}
+		}
+	}
+		
+	public void sendFriendRequest(FriendRequest fr){
+		User requestedUser = fr.getRequestedUser();
+		for (User key : connections.keySet()) {
+			if (User.isEqual(requestedUser, key)) {
+				System.out.println("sent a friend request to active connection");
+				ServerClientListener scl = connections.get(key);
+				scl.sendFriendRequest(fr);
 			}
 		}
 	}
@@ -180,6 +202,13 @@ public class MyServer {
 			for (User key : guestUserMap.keySet()) {
 				if (User.isGuestEqual(key, u)) {
 					guestUserMap.remove(key);
+				}
+			}
+		} else {
+			for (User key : connections.keySet()) {
+				if (User.isEqual(key, u)) {
+					connections.remove(key);
+					System.out.println("Removed + " + u.getUsername());
 				}
 			}
 		}

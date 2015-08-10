@@ -1,7 +1,4 @@
-AddEventWindow :
-	illegally formatted events
 MainWindow : 
-	Add name
 	friends list
 	add upcoming events
 	Add Messages
@@ -9,3 +6,5 @@ LoginWindow :
 	add errors
 Server Client communication :
 	Sending messages
+	limit guest functionality
+	quit connection

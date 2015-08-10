@@ -7,6 +7,7 @@ import resources.AddEvent;
 import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
+import resources.FriendRequest;
 import resources.GetEvents;
 import resources.SearchFriend;
 
@@ -35,6 +36,7 @@ public class ReceiveData extends Thread {
 				ifGetEvents(obj);
 				ifSearchFriend(obj);
 				ifAddFriend(obj);
+				ifFriendRequest(obj);
 				ifQuitUser(obj);
 				
 			} catch (IOException | ClassNotFoundException e) {
@@ -49,6 +51,9 @@ public class ReceiveData extends Thread {
 
 			CheckUser cu = (CheckUser)obj;
 			server.checkUser(cu);
+			if (cu.doesExist()) {
+				server.addConnection(cu.getUser(), scl);
+			}
 			scl.sendBackCheckUser(cu);
 		}
 	}
@@ -58,8 +63,10 @@ public class ReceiveData extends Thread {
 			
 			AddUser au = (AddUser)obj;
 			server.addUser(au);
+			if (au.isSuccessfulAdd()) {
+				server.addConnection(au.getUser(), scl);				
+			}
 			scl.sendBackAddUser(au);
-			System.out.println("Sent add user");
 		}
 	}
 	
@@ -100,6 +107,13 @@ public class ReceiveData extends Thread {
 			AddFriend af = (AddFriend)obj;
 			server.addFriend(af);
 			scl.sendBackAddFriend(af);
+		}
+	}
+	
+	private void ifFriendRequest(Object obj) {
+		if (obj instanceof FriendRequest) {
+			FriendRequest fr = (FriendRequest)obj;
+			server.sendFriendRequest(fr);
 		}
 	}
 }
