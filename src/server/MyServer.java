@@ -28,12 +28,15 @@ public class MyServer {
 	private static ServerListener sl;
 	
 	private Map<User, MyCalendar> userMap;
-	
+	private Map<User, MyCalendar> guestUserMap;
+	int guestIndex = 0;
+	 
 	public MyServer(int port) {
 		
 		//instantiate GUI for server
 		try {
 			userMap = new HashMap<User, MyCalendar>();
+			guestUserMap = new HashMap<User, MyCalendar>();
 			ss = new ServerSocket(port);
 			sl = new ServerListener(ss, this);
 			sl.start();
@@ -64,7 +67,8 @@ public class MyServer {
 	public void addUser(AddUser au) {
 		String username = au.getUsername();
 		User u;
-		if (!username.equals("Guest")) {
+		MyCalendar c = new MyCalendar();
+		if (!au.isGuest()) {
 			for (User key : userMap.keySet()) {
 				if (username.equals(key.getUsername())) {
 					au.setSuccessfulAdd(false);
@@ -72,11 +76,13 @@ public class MyServer {
 				}		
 			}
 			u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
+			userMap.put(u, c);
 		} else {
 			u = new User("Guest", "", "Guest", true);
+			u.setGuestIndex(guestIndex);
+			guestIndex++;
+			guestUserMap.put(u, c);
 		}
-		MyCalendar c = new MyCalendar();
-		userMap.put(u, c);
 		au.setSuccessfulAdd(true);
 		au.setUser(u);
 	}
@@ -98,11 +104,19 @@ public class MyServer {
 		User u = ae.getU();
 		MyEvent e = ae.getE();
 		MyCalendar value = null;
-		for (User key : userMap.keySet()) {
-			if (User.isEqual(key, u)) {
-				value = userMap.get(key);
+		if (!u.isGuest()) {
+			for (User key : userMap.keySet()) {
+				if (User.isEqual(key, u)) {
+					value = userMap.get(key);
+				}
+			}				
+		} else {
+			for (User key : guestUserMap.keySet()) {
+				if (User.isGuestEqual(key, u)) {
+					value = guestUserMap.get(key);
+				}
 			}
-		}	
+		}
 		if (value != null) {
 			value.addEvent(e);
 			ae.setSuccessfulAdd(true);
@@ -114,13 +128,20 @@ public class MyServer {
 		MyDate start = u.getCurrDate();
 		MyDate end = u.getCurrDate();
 		MyCalendar value = null;
-		for (User key : userMap.keySet()) {
-			if (User.isEqual(key, u)) {
-				value = userMap.get(key);
+		if (!u.isGuest()) {
+			for (User key : userMap.keySet()) {
+				if (User.isEqual(key, u)) {
+					value = userMap.get(key);
+				}
 			}
-		}		
+		} else {
+			for (User key : guestUserMap.keySet()) {
+				if (User.isGuestEqual(key, u)) {
+					value = guestUserMap.get(key);
+				}
+			}
+		}
 		if (value != null) {
-			System.out.println("GetEvents date: " + start);
 			if (MyDate.isSameDay(start, end)) {
 				Vector<MyEvent> events = value.getDaysEvent(start);
 				ge.setEvents(events);
@@ -129,17 +150,18 @@ public class MyServer {
 		} else {
 			System.out.println("Server determined value is null");
 		}
+
 	}
-/*
-	//MAKE SURE DATE INCLUDES THE LATEST TIME IN THE DAY
-	public Vector<Event> getDayEvent(User u, Date date) {
-		Vector<Event> result = new Vector<Event>();
-		Calendar value = userMap.get(u);
-		if (value != null && value.getLength() != 0) {
-			//value
+
+	public void quitUser(User u) {
+		if (u.isGuest()) {
+			for (User key : guestUserMap.keySet()) {
+				if (User.isGuestEqual(key, u)) {
+					guestUserMap.remove(key);
+					System.out.println("Size of Guest map: " + guestUserMap.size());
+				}
+			}
 		}
-		return result;
 	}
-*/	
 }
 

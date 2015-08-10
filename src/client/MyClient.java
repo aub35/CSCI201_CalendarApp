@@ -167,7 +167,6 @@ public class MyClient extends Thread {
 			outputStream.writeObject(ge2);
 			outputStream.flush();
 			outputStream.reset();
-			System.out.println("Sent getEvents");
 			while (!haveReceivedGetEvents) {
 				Thread.sleep(100);
 			}
@@ -175,10 +174,7 @@ public class MyClient extends Thread {
 			Thread.sleep(100);
 			GetEvents ge = rd.getevents;
 			if (ge.isSuccessfulGet()) {
-				System.out.println("Original sent with : " + user.getCurrDate());
-				System.out.println("Received ge with : " + ge.getStart());
 				Vector<MyEvent> events = ge.getEvents();
-				System.out.println("Successfully got " + events.size() + " events"); 
 				for (int i = 0; i < events.size(); i++) {
 					mainwindow.displayEvent(events.get(i));
 				}
@@ -206,20 +202,28 @@ public class MyClient extends Thread {
 	public void logout() {
 		closeMainWindow();
 		openLoginWindow();
+		if (user.isGuest()) {
+			System.out.println("User is a guest");
+			try {
+				outputStream.writeObject(user);
+				outputStream.flush();
+				outputStream.reset();
+			} catch(IOException ie) {
+				ie.printStackTrace();
+			}
+		}
 		user = null;
 	}
 	
 	public void nextDay() {
 		MyDate next = MyDate.getNextDay(user.getCurrDate());
 		user.setCurrDate(next);
-		System.out.println("New date: " + user.getCurrDate());
 		getDaysEvents(user.getCurrDate());
 	}
 	
 	public void previousDay() {
 		MyDate prev = MyDate.getPrevDay(user.getCurrDate());
 		user.setCurrDate(prev);
-		System.out.println("New date: " + user.getCurrDate());
 		getDaysEvents(user.getCurrDate());
 	}
 	

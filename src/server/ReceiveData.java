@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import calendar.MyDate;
+import calendar.User;
 import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
@@ -14,13 +15,11 @@ public class ReceiveData extends Thread {
 	private ObjectInputStream inputStream;
 	private MyServer server;
 	private ServerClientListener scl;
-	private GetEvents previous;
 	
 	ReceiveData(ObjectInputStream inputStream, MyServer server, ServerClientListener scl) {
 		this.inputStream = inputStream;
 		this.server = server;
 		this.scl = scl;
-		previous = null;
 	}
 	
 	public void run() {
@@ -34,6 +33,7 @@ public class ReceiveData extends Thread {
 				ifAddUser(obj);
 				ifAddEvent(obj);
 				ifGetEvents(obj);
+				ifQuitUser(obj);
 				
 			} catch (IOException | ClassNotFoundException e) {
 				break;
@@ -73,16 +73,15 @@ public class ReceiveData extends Thread {
 	private void ifGetEvents(Object obj) {
 		if (obj instanceof GetEvents) {
 			GetEvents ge = (GetEvents)obj;
-			if (previous == null) {
-				previous = ge;
-			} else {
-				System.out.println(ge.equals(previous));
-			}
-			MyDate currDate = ge.getStart();
-			System.out.println("Server received date: " + currDate);
 			server.getEvents(ge);
 			scl.sendBackGetEvent(ge);
-			ge.setStart(currDate);
+		}
+	}
+	
+	private void ifQuitUser(Object obj) {
+		if (obj instanceof User) {
+			User u = (User)obj;
+			server.quitUser(u);
 		}
 	}
 }

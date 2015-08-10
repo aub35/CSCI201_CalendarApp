@@ -13,16 +13,33 @@ public class User implements Serializable {
 	private boolean isGuest;
 	private Vector<User> friends;
 	private MyDate currDate;
+	private int guestIndex;
 	
+	public int getGuestIndex() {
+		return guestIndex;
+	}
+
+	public void setGuestIndex(int guestIndex) {
+		this.guestIndex = guestIndex;
+	}
+
 	public User(String username, String password, String name, boolean isGuest) {
 		this.username = username;
 		this.password = password;
 		this.name = name;
 		this.isGuest = isGuest;
+		friends = new Vector<User>();
 	}
 
 	public static boolean isEqual(User u1, User u2) {
 		if (u1.getUsername().equals(u2.getUsername())) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isGuestEqual(User u1, User u2) {
+		if (u1.getGuestIndex() == u2.getGuestIndex()) {
 			return true;
 		}
 		return false;
