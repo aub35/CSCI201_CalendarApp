@@ -10,30 +10,36 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import calendar.MyDate;
 import calendar.MyEvent;
+import calendar.User;
 
 public class MainWindow extends JFrame {
 	private MyClient c;
-	JButton addEventButton, logoutButton, previousButton, nextButton;
-	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel;
-	JDialog EventWindow;
+	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton;
+	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel, leftPanel;
+	JDialog addEventWindow, addFriendWindow;
 	JScrollPane jsp;
 	GridBagConstraints gbc;
 	JLabel [] hourLabels, eventLabels, weekdayLabels;
 	JLabel [] monthDayLabels;
-	JLabel currDateLabel;
+	JLabel currDateLabel, modeLabel;
+	JTextArea friendsTextArea;
 	MyDate currDate;
 	Vector<MyEvent> events;
 	boolean monthlyMode;
+	JRadioButton dailyRadioButton, monthlyRadioButton;
+	ButtonGroup modeButtonGroup;
 	
 	
 	public MainWindow(MyClient c) {
@@ -130,9 +136,37 @@ public class MainWindow extends JFrame {
 		
 		addEventButton =new JButton("Add Event");
 		rightPanel.add(addEventButton);
+		addFriendButton = new JButton("Add Friend");
+		rightPanel.add(addFriendButton);
 		logoutButton = new JButton("Log out");
 		rightPanel.add(logoutButton);
+		friendsTextArea = new JTextArea();
+		friendsTextArea.setEditable(false);
+		rightPanel.add(friendsTextArea);
+		
+		
 		add(rightPanel, BorderLayout.EAST);
+		
+		
+		
+		//leftPanel
+		leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		
+		modeLabel = new JLabel("Mode: ");
+		leftPanel.add(modeLabel);
+		
+		modeButtonGroup  = new ButtonGroup();
+		dailyRadioButton = new JRadioButton("Daily");
+		dailyRadioButton.setSelected(true);
+		monthlyRadioButton = new JRadioButton("Monthly");
+		modeButtonGroup.add(dailyRadioButton);
+		modeButtonGroup.add(monthlyRadioButton);
+		
+		leftPanel.add(dailyRadioButton);
+		leftPanel.add(monthlyRadioButton);
+		
+		add(leftPanel, BorderLayout.WEST);
 	}
 		
 	
@@ -169,7 +203,13 @@ public class MainWindow extends JFrame {
 		
 		addEventButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				EventWindow = new AddEventWindow(c);				
+				addEventWindow = new AddEventWindow(c);				
+			}
+		});
+		
+		addFriendButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				addFriendWindow = new AddFriendWindow(c);
 			}
 		});
 		
@@ -197,6 +237,20 @@ public class MainWindow extends JFrame {
 				// change currDate value to next one
 				// get previous day events vector
 				c.nextDay();
+			}
+		});
+		
+		monthlyRadioButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				monthlyMode = true;
+				displayMonthly();
+			}
+		});
+		
+		dailyRadioButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				monthlyMode = false;
+				displayDaily();
 			}
 		});
 	}
@@ -257,17 +311,28 @@ public class MainWindow extends JFrame {
 		
 	}
 	
-	public void displayMonth(){
+	
+	public void displayMonthly(){
 		//if (!monthlyMode){
 		//	return;
 		//}
-		calPanel.add(monthPanel, BorderLayout.CENTER);
+		calPanel.remove(jsp);
+		calPanel.add(monthPanel);
 		
-		revalidate();
+		validate();
 		repaint();
 	}
 
+	public void displayDaily(){
+		calPanel.remove(monthPanel);
+		calPanel.add(jsp);
+		validate();
+		repaint();
+	}
 	
+	public void displayFriend(User u){
+		friendsTextArea.append(u.getName() + "\n" + u.getUsername() + "\n");
+	}
 	
 /*	
 	public static void main (String[] args){
@@ -276,7 +341,8 @@ public class MainWindow extends JFrame {
 		MainWindow mainWindow = new MainWindow(c);
 		MyEvent e = new MyEvent(new MyDate(0, 3, 1, 1, 2015), new MyDate(0, 6, 1, 1, 2015), "meeting", "vkc", true);
 		mainWindow.displayEvent(e);
-		mainWindow.displayMonth();
+		//mainWindow.displayMonth();
 	}
 */
+
 }
