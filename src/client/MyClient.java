@@ -161,8 +161,6 @@ public class MyClient extends Thread {
 	//get day's events
 	public void getDaysEvents(MyDate date) {
 		try {
-			
-//			user.setCurrDate(date);
 			GetEvents ge2 = new GetEvents(date, date, user);
 			outputStream.writeObject(ge2);
 			outputStream.flush();

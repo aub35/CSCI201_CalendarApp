@@ -13,6 +13,7 @@ import resources.AddEvent;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.GetEvents;
+import resources.SearchFriend;
 import calendar.MyCalendar;
 import calendar.MyDate;
 import calendar.MyEvent;
@@ -150,7 +151,10 @@ public class MyServer {
 		} else {
 			System.out.println("Server determined value is null");
 		}
-
+	}
+	
+	public void searchForFriend(SearchFriend sf) {
+		
 	}
 
 	public void quitUser(User u) {
