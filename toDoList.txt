@@ -1,18 +1,11 @@
 AddEventWindow :
-	day of week??
-	am/pm for both times
-	location field
-	important
 	illegally formatted events
-	format nicer
 MainWindow : 
-	add name to corner 
-	other modes
+	Add name
 	friends list
 	add upcoming events
+	Add Messages
 LoginWindow :
 	add errors
 Server Client communication :
-	Guest Login
-	update database
-	adding friends
+	Sending messages
