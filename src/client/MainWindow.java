@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -23,20 +24,26 @@ import calendar.MyEvent;
 public class MainWindow extends JFrame {
 	private MyClient c;
 	JButton addEventButton, logoutButton, previousButton, nextButton;
-	JPanel centerPanel, rightPanel, dayPanel, switchDatePanel;
+	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel;
 	JDialog EventWindow;
 	JScrollPane jsp;
 	GridBagConstraints gbc;
-	JLabel [] hourLabels;
-	JLabel [] eventLabels;
+	JLabel [] hourLabels, eventLabels, weekdayLabels;
+	JLabel [] monthDayLabels;
+	JLabel currDateLabel;
 	MyDate currDate;
 	Vector<MyEvent> events;
+	boolean monthlyMode;
+	
 	
 	public MainWindow(MyClient c) {
 		this.c = c;
-		//currDate
-		// events...
+		//TODO
+		//currDate = c.getCurrDate();
+		currDate = new MyDate(0, 0, 9, 8, 2015);
+		// events
 		
+		monthlyMode = false;
 		createGUI();
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +57,14 @@ public class MainWindow extends JFrame {
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		
+		//TODO add current date Label
+		
+		
+		
 		//Panel for Calendar
+		calPanel = new JPanel();
+		calPanel.setLayout(new BorderLayout());
+		
 		//Daily Mode
 		dayPanel = new JPanel();
 		dayPanel.setLayout(new GridBagLayout());
@@ -85,7 +99,8 @@ public class MainWindow extends JFrame {
 		jsp = new JScrollPane(dayPanel);
 		jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		centerPanel.add(jsp);
+		calPanel.add(jsp, BorderLayout.CENTER);
+		centerPanel.add(calPanel);
 		
 				
 		JTextArea eventTextArea = new JTextArea();
@@ -105,7 +120,8 @@ public class MainWindow extends JFrame {
 		
 		add(centerPanel);
 		
-
+		// monthly Panel
+		createMonthPanel();
 		
 		
 		// rightPanel
@@ -139,7 +155,7 @@ public class MainWindow extends JFrame {
 		}		
 	}
 	
-	public void clearBoard(){
+	public void clearEvents(){
 		for (int i=0; i<24; i++){
 			eventLabels[i].setText(" ");
 			eventLabels[i].setBackground(dayPanel.getBackground());
@@ -166,7 +182,7 @@ public class MainWindow extends JFrame {
 		previousButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
-				clearBoard();
+				clearEvents();
 				//TODO need work here
 				// change currDate value to previous
 				c.previousDay();
@@ -176,7 +192,7 @@ public class MainWindow extends JFrame {
 		
 		nextButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				clearBoard();
+				clearEvents();
 				//TODO need work here
 				// change currDate value to next one
 				// get previous day events vector
@@ -185,14 +201,82 @@ public class MainWindow extends JFrame {
 		});
 	}
 	
-	
-	/*
-	public static void main (String[] args){
-		Client c = new Client("localhost", 3097);
-		MainWindow mainWindow = new MainWindow(c);
-		Event e = new Event(new Date(0, 0 , 1, 1, 1, 2015, false), new Date(0, 2, 1, 1, 1, 2015, false), "meeting", "vkc", true);
-		mainWindow.displayEvent(e);
-
+	private void createMonthPanel(){
+		monthPanel  = new JPanel();
+		monthPanel.setLayout(new GridLayout(7,7));
+		weekdayLabels = new JLabel[7];
+		
+		weekdayLabels[0] = new JLabel("Sun");
+		weekdayLabels[1] = new JLabel("Mon");
+		weekdayLabels[2] = new JLabel("Tue");
+		weekdayLabels[3] = new JLabel("Wed");
+		weekdayLabels[4] = new JLabel("Thu");
+		weekdayLabels[5] = new JLabel("Fri");
+		weekdayLabels[6] = new JLabel("Sat");
+		
+		for (int i=0; i<7; i++){
+			monthPanel.add(weekdayLabels[i]);
+		}
+		configureMonthLabels(currDate.getMonth(), currDate.getYear());
+		
+		
 	}
-*/
+	
+	private void configureMonthLabels(int month, int year){
+		MyDate firstDayOfMonth = new MyDate(0, 0, 1, month, year);
+		int first = firstDayOfMonth.getDayOfWeek(firstDayOfMonth);
+		
+		if (first==7){
+			first = 0;
+		}
+		
+		for (int i=0; i<first; i++){
+			JLabel label = new JLabel("");
+			if (monthPanel==null){
+				System.out.println("here");
+			}
+			monthPanel.add(label);
+		}
+		
+		int daysInMonth;
+		if (firstDayOfMonth.isEndOfMonth(month, 28)){
+			daysInMonth = 28;
+		}
+		else if (firstDayOfMonth.isEndOfMonth(month, 30)){
+			daysInMonth = 30;
+		}
+		else {
+			daysInMonth = 31;
+		}
+		monthDayLabels = new JLabel[daysInMonth];
+		for (int i=0; i<daysInMonth; i++){
+			monthDayLabels[i] = new JLabel(""+(i+1));
+			monthPanel.add(monthDayLabels[i]);
+		}
+
+		
+	}
+	
+	public void displayMonth(){
+		//if (!monthlyMode){
+		//	return;
+		//}
+		calPanel.add(monthPanel, BorderLayout.CENTER);
+		
+		revalidate();
+		repaint();
+	}
+
+	
+	
+	
+	public static void main (String[] args){
+		
+		MyClient c = new MyClient("localhost", 1111);
+		MainWindow mainWindow = new MainWindow(c);
+		MyEvent e = new MyEvent(new MyDate(0, 3, 1, 1, 2015), new MyDate(0, 6, 1, 1, 2015), "meeting", "vkc", true);
+		mainWindow.displayEvent(e);
+		mainWindow.displayMonth();
+	}
+
 }

@@ -237,6 +237,10 @@ public class MyClient extends Thread {
 		}
 	}
 	
+	public MyDate getCurrDate(){
+		return currentDate;
+	}
+	
 	//GUI functionality
 	private void closeLoginWindow() {
 		loginwindow.dispose();

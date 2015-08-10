@@ -121,8 +121,11 @@ public class MyDate implements Serializable {
 	
 	
 	public String toString() {
-		String str = month + "/" + dayOfMonth + "/" + year;
-		str += " - " + hour + ":" + minute;
+		String str = String.format("%02d/%02d/%04d", month, dayOfMonth, year);
+		//String str = month + "/" + dayOfMonth + "/" + year;
+		str += "\n";
+		str += String.format("%02d:%02d", hour, minute);
+		//str += "\n" + hour + ":" + minute;
 		return str;
 	}
 
@@ -133,5 +136,6 @@ public class MyDate implements Serializable {
 	public void setMonth(int month) {
 		this.month = month;
 	}
+	
 	
 }
