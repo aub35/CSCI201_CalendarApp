@@ -14,10 +14,11 @@ public class MySQLDriver {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
 	static final String DB_URL = "jdbc:mysql://localhost/";
+	static final String DB_NAME = "USERS";
 	
-	//  Database credentials
-   static final String USER = "root";
-   static final String PASS = "root";
+	//  Database credentials, could ask for 
+	static final String USER = "root";
+	static final String PASS = "root";
    
 	private Connection con;
 	private final static String selectUser = "SELECT * FROM REGISTRATION WHERE NAME=?";
@@ -35,6 +36,15 @@ public class MySQLDriver {
 	public void connect(){
 		try {
 			//Class.forName("com.mysql.jdbc.Driver");
+			
+			//Scanner in = new Scanner(System.in);
+			//System.out.println("Enter MySQL username for local host: ");
+			//String mySQLuser = in.nextLine();
+			//System.out.println("Enter MySQL password for local host: ");
+			//String mysSQLpass = in.nextLine();
+			
+			//con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
+			
 			con = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -61,7 +71,7 @@ public class MySQLDriver {
 		   System.out.println("Creating database...");
 		   stmt = con.createStatement();
 		   
-		   String sql = "CREATE DATABASE USERS";
+		   String sql = "CREATE DATABASE IF NOT EXISTS " + DB_NAME;
 		   
 		   stmt.executeUpdate(sql);
 		   System.out.println("Database created successfully!");
@@ -86,7 +96,7 @@ public class MySQLDriver {
 		    System.out.println("Creating table in users database...");
 		    stmt = con.createStatement();
 		    
-		    String sql = "CREATE TABLE REGISTRATION " +
+		    String sql = "CREATE TABLE IF NOT EXISTS REGISTRATION " +
 	                   "(username VARCHAR(45) not NULL, " +
 	                   " password VARCHAR(45), " + 
 	                   " name VARCHAR(45), " +
@@ -106,6 +116,26 @@ public class MySQLDriver {
 	      } catch(SQLException se2) { }// nothing we can do
 	   }
 	}
+	
+	//Check if database exists
+	public boolean checkDBExists() {
+	    try{
+	        ResultSet resultSet = con.getMetaData().getCatalogs();
+
+	        while (resultSet.next()) {
+	        	String databaseName = resultSet.getString(1);
+	        	if(databaseName.equals(DB_NAME)) {
+	                return true;
+	            }
+	        }
+	        resultSet.close();
+	    }
+	    catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+
 	
 	// Determine if user exists
 	public boolean doesExist(String username) {
