@@ -36,6 +36,8 @@ public class MyServer {
 	private Map<User, ServerClientListener> connections;
 	private MyTrie usernameList;
 	int guestIndex = 0;
+	
+	static public MySQLDriver msql;
 	 
 	public MyServer(int port) {
 		
@@ -48,6 +50,13 @@ public class MyServer {
 			ss = new ServerSocket(port);
 			sl = new ServerListener(ss, this);
 			sl.start();
+			
+			msql = new MySQLDriver();
+			//msql.connect();
+			msql.createDatabase();
+			msql.createTable();
+			//msql.stop();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -91,6 +100,7 @@ public class MyServer {
 			u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
 			userMap.put(u, c);
 			usernameList.add(au.getUsername());
+			sendUser(u); // sends user to database
 		} else {
 			u = new User("Guest", "", "Guest", true);
 			u.setGuestIndex(guestIndex);
@@ -100,6 +110,19 @@ public class MyServer {
 		au.setSuccessfulAdd(true);
 		au.setUser(u);
 	}
+	
+	public static void sendUser(User u) {
+		msql.connectToDB();
+		if ( !msql.doesExist(u.getUsername()) ) {
+			msql.add(u.getUsername(), u.getPassword(), u.getName());
+		}
+		msql.stop();
+		
+		/*if (serverListener != null) {
+			serverListener.sendFactory(factory);
+		}*/
+	}
+	
 	
 	public MyDate currentTime() {
 		LocalTime lt = LocalTime.now();

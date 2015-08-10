@@ -2,6 +2,7 @@ package server;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
@@ -16,42 +17,55 @@ public class MySQLDriver {
 	static final String DB_URL = "jdbc:mysql://localhost/";
 	static final String DB_NAME = "USERS";
 	
-	//  Database credentials, could ask for 
-	static final String USER = "root";
-	static final String PASS = "root";
+	//  Database credentials
+	//static final String USER = "root";
+	//static final String PASS = "root";
+	private String mySQLuser;
+	private String mySQLpass;
    
 	private Connection con;
 	private final static String selectUser = "SELECT * FROM REGISTRATION WHERE NAME=?";
 	private final static String addUser = "INSERT INTO Registration(USERNAME,PASSWORD,NAME) VALUES(?,?,?)";
 	
 	public MySQLDriver() {
+		Scanner in = null;
 		try {
 			new Driver();
+			Class.forName(JDBC_DRIVER);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-	}
-	
-	//connect with MySQL database
-	public void connect(){
-		try {
-			//Class.forName("com.mysql.jdbc.Driver");
-			
-			//Scanner in = new Scanner(System.in);
-			//System.out.println("Enter MySQL username for local host: ");
-			//String mySQLuser = in.nextLine();
-			//System.out.println("Enter MySQL password for local host: ");
-			//String mysSQLpass = in.nextLine();
-			
-			//con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
-			
-			con = DriverManager.getConnection(DB_URL, USER, PASS);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}  catch(Exception e) {
+		} catch (Exception e) {
 		      //Handle errors for Class.forName
 		      e.printStackTrace();
 		}
+		finally {
+			in = new Scanner(System.in);
+			System.out.println("Enter MySQL username for local host: ");
+			mySQLuser = in.nextLine();
+			System.out.println("Enter MySQL password for local host: ");
+			mySQLpass = in.nextLine();
+			in.close();
+		}
+	}
+	
+	//connect to MySQL
+	public void connect(){	
+		try {
+			con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
+			//con = DriverManager.getConnection(DB_URL, USER, PASS);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
+	}
+	
+	//connect to MySQL database
+	public void connectToDB(){	
+		try {
+			con = DriverManager.getConnection(DB_URL+DB_NAME, mySQLuser, mySQLpass);
+			//con = DriverManager.getConnection(DB_URL, USER, PASS);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
 	}
 	
 	//stop MySQL connection
@@ -65,7 +79,8 @@ public class MySQLDriver {
 	
 	//create database
 	public void createDatabase() {
-	   Statement stmt = null;
+		connect();
+		Statement stmt = null;
 	   try{
 		   //Execute a query
 		   System.out.println("Creating database...");
@@ -82,14 +97,17 @@ public class MySQLDriver {
 	   	} finally {
 	   		//finally block used to close resources
 	   		try{
-	   			if(stmt!=null)
+	   			if (stmt!=null) {
 	   				stmt.close();
+	   			}
 	      } catch(SQLException se2) { }// nothing we can do
+	   		stop();
 	   }
 	}
 	
 	//create table
 	public void createTable() {
+		connectToDB();
 		Statement stmt = null;
 		try{
 			//Execute a query
@@ -111,9 +129,11 @@ public class MySQLDriver {
 	   	} finally {
 	      //finally block used to close resources
 	      try{
-	         if(stmt!=null)
-	            stmt.close();
+	    	  if (stmt!=null) {
+	    		  stmt.close();
+	    	  }
 	      } catch(SQLException se2) { }// nothing we can do
+	      stop();
 	   }
 	}
 	
@@ -144,7 +164,7 @@ public class MySQLDriver {
 			ps.setString(1, username);
 			ResultSet result = ps.executeQuery();
 			while (result.next()) {
-				System.out.println(result.getString(1) + " exists in database");
+				System.out.println(result.getString(1) + " exists in database table");
 				return true;
 			}
 		} catch (SQLException e) {
