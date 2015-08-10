@@ -45,5 +45,6 @@ public class MyEvent implements Serializable {
 		if (location!=null){
 			str+="@" + location;
 		}
+		return str;
 	}
 }
