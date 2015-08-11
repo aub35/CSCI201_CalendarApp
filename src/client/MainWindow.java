@@ -254,6 +254,8 @@ public class MainWindow extends JFrame {
 				//TODO need work here
 				// change currDate value to previous
 				c.previousDay();
+				currDate = c.getCurrDate();
+				currDateLabel.setText(currDate.displayDate());
 			}
 			
 		});
@@ -265,6 +267,8 @@ public class MainWindow extends JFrame {
 				// change currDate value to next one
 				// get previous day events vector
 				c.nextDay();
+				currDate = c.getCurrDate();
+				currDateLabel.setText(currDate.displayDate());
 			}
 		});
 		
@@ -427,6 +431,7 @@ public class MainWindow extends JFrame {
 			}
 		}
 		else{
+
 			MyDate startDate = new MyDate(0, 0, 1, currDate.getMonth(), currDate.getYear());
 			MyDate endDate = MyDate.getEndOfMonth(startDate);
 			System.out.println("Start date: " + startDate);
@@ -434,6 +439,7 @@ public class MainWindow extends JFrame {
 			System.out.println("Size: " + events.size());
 			for (int j=0; j<events.size();j++){
 					eventTextArea.append(events.get(j).toString());
+
 				}
 			}
 	}
