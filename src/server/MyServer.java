@@ -66,19 +66,21 @@ public class MyServer {
 	public void checkUser(CheckUser cu) {
 		String username = cu.getUsername();
 		String password = cu.getPassword();
-		for (User key : userMap.keySet()) {
-			String keyUsername = key.getUsername();
-			String keyPassword = key.getPassword();
-			if (username.equals(keyUsername)) {
-				if (password.equals(keyPassword)) {
-					cu.setDoesExist(true);
-					cu.setUser(key);
-					return;
-				} else {
-					cu.setDoesExist(false);
-					return;
+		synchronized (userMap) {
+			for (User key : userMap.keySet()) {
+				String keyUsername = key.getUsername();
+				String keyPassword = key.getPassword();
+				if (username.equals(keyUsername)) {
+					if (password.equals(keyPassword)) {
+						cu.setDoesExist(true);
+						cu.setUser(key);
+						return;
+					} else {
+						cu.setDoesExist(false);
+						return;
+					}
 				}
-			}
+			}			
 		}
 	}
 	
@@ -91,16 +93,18 @@ public class MyServer {
 		User u;
 		MyCalendar c = new MyCalendar();
 		if (!au.isGuest()) {
-			for (User key : userMap.keySet()) {
-				if (username.equals(key.getUsername())) {
-					au.setSuccessfulAdd(false);
-					return;
-				}		
+			synchronized (userMap){
+				for (User key : userMap.keySet()) {
+					if (username.equals(key.getUsername())) {
+						au.setSuccessfulAdd(false);
+						return;
+					}		
+				}
+				u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
+				userMap.put(u, c);
+				usernameList.add(au.getUsername());
+				//sendUser(u); // sends user to database				
 			}
-			u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
-			userMap.put(u, c);
-			usernameList.add(au.getUsername());
-			//sendUser(u); // sends user to database
 		} else {
 			u = new User("Guest", "", "Guest", true);
 			u.setGuestIndex(guestIndex);
@@ -138,16 +142,20 @@ public class MyServer {
 		MyEvent e = ae.getE();
 		MyCalendar value = null;
 		if (!u.isGuest()) {
-			for (User key : userMap.keySet()) {
-				if (User.isEqual(key, u)) {
-					value = userMap.get(key);
-				}
-			}				
+			synchronized (userMap) {
+				for (User key : userMap.keySet()) {
+					if (User.isEqual(key, u)) {
+						value = userMap.get(key);
+					}
+				}								
+			}
 		} else {
-			for (User key : guestUserMap.keySet()) {
-				if (User.isGuestEqual(key, u)) {
-					value = guestUserMap.get(key);
-				}
+			synchronized (guestUserMap) {
+				for (User key : guestUserMap.keySet()) {
+					if (User.isGuestEqual(key, u)) {
+						value = guestUserMap.get(key);
+					}
+				}				
 			}
 		}
 		if (value != null) {
@@ -162,16 +170,20 @@ public class MyServer {
 		MyDate end = ge.getEnd();
 		MyCalendar value = null;
 		if (!u.isGuest()) {
-			for (User key : userMap.keySet()) {
-				if (User.isEqual(key, u)) {
-					value = userMap.get(key);
-				}
+			synchronized (userMap) {
+				for (User key : userMap.keySet()) {
+					if (User.isEqual(key, u)) {
+						value = userMap.get(key);
+					}
+				}				
 			}
 		} else {
-			for (User key : guestUserMap.keySet()) {
-				if (User.isGuestEqual(key, u)) {
-					value = guestUserMap.get(key);
-				}
+			synchronized (guestUserMap) {
+				for (User key : guestUserMap.keySet()) {
+					if (User.isGuestEqual(key, u)) {
+						value = guestUserMap.get(key);
+					}
+				}				
 			}
 		}
 		if (value != null) {
@@ -200,13 +212,15 @@ public class MyServer {
 	public void addFriend(AddFriend af) {
 		String toSearch = af.getUsername();
 		User adder = af.getAdder();
-		for (User key : userMap.keySet()) {
-			if (key.getUsername().equals(toSearch)) {
-				af.setAdder(adder);
-				af.setRequestedUser(key);
-				key.addFriendRequest(adder);
-				af.setSuccessfulAdd(true);
-			}
+		synchronized (userMap) {
+			for (User key : userMap.keySet()) {
+				if (key.getUsername().equals(toSearch)) {
+					af.setAdder(adder);
+					af.setRequestedUser(key);
+					key.addFriendRequest(adder);
+					af.setSuccessfulAdd(true);
+				}
+			}			
 		}
 	}
 	
@@ -224,48 +238,58 @@ public class MyServer {
 	public void sendFriendRequestResponse(FriendRequestResponse frr) {
 		User adder = frr.getAdder();
 		User added = frr.getAdded();
-		for (User key : userMap.keySet()) {
-			if (User.isEqual(key, adder)) {
-				if (frr.isDidAccept()) {	
-					key.addFriend(added);
+		synchronized (userMap) {
+			for (User key : userMap.keySet()) {
+				if (User.isEqual(key, adder)) {
+					if (frr.isDidAccept()) {	
+						key.addFriend(added);
+					}
+				} else if (User.isEqual(key, added)) {
+					if (frr.isDidAccept()){
+						key.addFriend(adder);					
+					}
+					key.removeFriendRequest(adder);
 				}
-			} else if (User.isEqual(key, added)) {
-				if (frr.isDidAccept()){
-					key.addFriend(adder);					
-				}
-				key.removeFriendRequest(adder);
-			}
+			}			
 		}
-		for (User key : connections.keySet()) {
-			if (User.isEqual(key, adder)) {
-				ServerClientListener scl = connections.get(key);
-				scl.sendBackFriendRequestResponse(frr);
-			}
+		synchronized (connections) {
+			for (User key : connections.keySet()) {
+				if (User.isEqual(key, adder)) {
+					ServerClientListener scl = connections.get(key);
+					scl.sendBackFriendRequestResponse(frr);
+				}
+			}			
 		}
 	}
 		
 	public void sendFriendRequest(FriendRequest fr){
 		User requestedUser = fr.getRequestedUser();
-		for (User key : connections.keySet()) {
-			if (User.isEqual(requestedUser, key)) {
-				ServerClientListener scl = connections.get(key);
-				scl.sendFriendRequest(fr);
-			}
+		synchronized (connections) {
+			for (User key : connections.keySet()) {
+				if (User.isEqual(requestedUser, key)) {
+					ServerClientListener scl = connections.get(key);
+					scl.sendFriendRequest(fr);
+				}
+			}			
 		}
 	}
 	
 	public void quitUser(User u) {
 		if (u.isGuest()) {
-			for (User key : guestUserMap.keySet()) {
-				if (User.isGuestEqual(key, u)) {
-					guestUserMap.remove(key);
-				}
+			synchronized (guestUserMap) {
+				for (User key : guestUserMap.keySet()) {
+					if (User.isGuestEqual(key, u)) {
+						guestUserMap.remove(key);
+					}
+				}				
 			}
 		} else {
-			for (User key : connections.keySet()) {
-				if (User.isEqual(key, u)) {
-					connections.remove(key);
-				}
+			synchronized (connections) {
+				for (User key : connections.keySet()) {
+					if (User.isEqual(key, u)) {
+						connections.remove(key);
+					}
+				}				
 			}
 		}
 	}
