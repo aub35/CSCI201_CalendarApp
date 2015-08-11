@@ -44,6 +44,7 @@ public class MySQLDriver {
 			mySQLuser = in.nextLine();
 			System.out.println("Enter MySQL password for local host: ");
 			mySQLpass = in.nextLine();
+			if (mySQLpass.equals("")) mySQLpass = null;
 			in.close();
 		}
 	}
@@ -51,12 +52,7 @@ public class MySQLDriver {
 	//connect to MySQL
 	public void connect(){	
 		try {
-			if (mySQLpass.equals("")){
-				con = DriverManager.getConnection(DB_URL, mySQLuser, null);
-			}
-			else {
-				con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
-			}
+			con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
 			//con = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (SQLException e) {
 			e.printStackTrace();
