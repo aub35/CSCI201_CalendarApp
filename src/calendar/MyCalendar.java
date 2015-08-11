@@ -18,17 +18,8 @@ public class MyCalendar implements Serializable {
 	}
 	
 	public void addEvent(MyEvent e) {
-		for (int j = 0; j < events.size(); j++) {
-			System.out.println(e.getStart() + " - ");
-		}
-		System.out.println();
 		events.add(e);
 		Collections.sort(events, new EventComp());
-		for (int i = 0; i < events.size(); i++) {
-			MyEvent tempE = events.elementAt(i);
-			System.out.print(tempE.getStart() + " - ");
-		}
-		System.out.println();
 	}
 	
 	public int getLength() {
@@ -72,13 +63,11 @@ public class MyCalendar implements Serializable {
 		DateComp dc = new DateComp();
 		MyDate before = events.elementAt(index).getStart();
 		while (dc.compare(before, start) < 0) {
-			System.out.println("Iteration before: " + index);
 			index++;
 			if (index >= events.size()) { break; }
 			before = events.elementAt(index).getStart();
 		}
 		while (dc.compare(before, end) < 0) {
-			System.out.println("Iteration after: " + index);
 			if (events.elementAt(index).isImportant()) {
 				result.add(events.elementAt(index));
 			}

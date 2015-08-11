@@ -83,7 +83,6 @@ public class MyServer {
 	}
 	
 	public void addConnection(User u, ServerClientListener scl) {
-		System.out.println("Added user : " + u.getUsername());
 		connections.put(u, scl);
 	}
 		
@@ -177,23 +176,17 @@ public class MyServer {
 		}
 		if (value != null) {
 			Vector<MyEvent> events = new Vector<MyEvent>();
-			System.out.println("server got from " + start + " to " + end);
 			if (MyDate.isSameDay(start, end)) {
 				if (ge.isOnlyImportantEvents()){
-					System.out.println("Ran only got important events");
 					events = value.getDaysEvent(start, true);
 				} else {
-					System.out.println("Ran for unimpotant events too");
 					events = value.getDaysEvent(start, false);
 				}
 			} else {
-				System.out.println("Got Month's events");
 				events = value.getMonthsEvents(start, end);
 			}
 			ge.setEvents(events);
 			ge.setSuccessfulGet(true);
-		} else {
-			System.out.println("Server determined value is null");
 		}
 	}
 	
@@ -226,30 +219,21 @@ public class MyServer {
 				gfl.setSuccessfulGet(true);
 			}
 		}
-		System.out.println("Exiting getFriendList");
 	}
 	
 	public void sendFriendRequestResponse(FriendRequestResponse frr) {
 		User adder = frr.getAdder();
 		User added = frr.getAdded();
-		System.out.println("Is adder null " + adder);
 		for (User key : userMap.keySet()) {
-			if (key == null) {
-				System.out.println("Key is null");
-			}
 			if (User.isEqual(key, adder)) {
 				if (frr.isDidAccept()) {	
 					key.addFriend(added);
-					System.out.println(adder.getUsername() + " added friend");
 				}
 			} else if (User.isEqual(key, added)) {
 				if (frr.isDidAccept()){
 					key.addFriend(adder);					
-					System.out.println(added.getUsername() + " added friend");
 				}
 				key.removeFriendRequest(adder);
-				System.out.println(added.getUsername() + " removed request");
-
 			}
 		}
 		for (User key : connections.keySet()) {

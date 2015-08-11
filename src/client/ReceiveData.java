@@ -57,7 +57,6 @@ public class ReceiveData extends Thread {
 				ifAddFriend(obj);
 				ifFriendRequest(obj);
 				ifFriendRequestResponse(obj);
-				ifGetFriendList(obj);
 				
 				if (isQuit) { break; }
 				Thread.sleep(10);
@@ -116,13 +115,6 @@ public class ReceiveData extends Thread {
 		}
 	}
 	
-	private void ifGetFriendList(Object obj) {
-		if (obj instanceof GetFriendList) {
-			System.out.println("Got friends list");
-			getfriendlist = (GetFriendList)obj;
-			client.setHaveReceivedFriendList(true);
-		}
-	}
 	
 	private void ifFriendRequestResponse(Object obj) {
 		if (obj instanceof FriendRequestResponse) {

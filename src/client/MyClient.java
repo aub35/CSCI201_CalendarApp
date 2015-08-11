@@ -18,7 +18,6 @@ import resources.CheckUser;
 import resources.FriendRequest;
 import resources.FriendRequestResponse;
 import resources.GetEvents;
-import resources.GetFriendList;
 import resources.SearchFriend;
 
 //protocol should be to send username, password & check if there is a matching one in server database
@@ -37,8 +36,7 @@ public class MyClient extends Thread {
 
 	private boolean isGuest;
 	private boolean haveReceivedLogin, haveReceivedUser, haveReceivedAddEvent,
-	haveReceivedGetEvents, haveReceivedSearchFriend, haveReceivedAddFriend, 
-	haveReceivedFriendList = false;
+	haveReceivedGetEvents, haveReceivedSearchFriend, haveReceivedAddFriend = false;
 
 	private User user;
 	
@@ -55,9 +53,6 @@ public class MyClient extends Thread {
 	}
 	
 	//private variable setters
-	public void setHaveReceivedFriendList(boolean haveReceivedFriendList) {
-		this.haveReceivedFriendList = haveReceivedFriendList;
-	}
 	
 	public void setHaveReceivedLogin(boolean haveReceivedLogin) {
 		this.haveReceivedLogin = haveReceivedLogin;
@@ -111,10 +106,6 @@ public class MyClient extends Thread {
 			CheckUser checkuser = rd.checkuser;
 			if (checkuser.doesExist()) {
 				user = checkuser.getUser();
-				Vector<User> friendRequests = user.getFriendRequests();
-				for (int i = 0; i < friendRequests.size(); i++) {
-					System.out.println(friendRequests.elementAt(i).getUsername());
-				}
 				login();
 				successfulLogin=true;
 			} else {
@@ -174,7 +165,6 @@ public class MyClient extends Thread {
 			Thread.sleep(100);
 			AddEvent ae = rd.addevent;
 			if (ae.isSuccessfulAdd()) {
-				System.out.println("Successfully added event");
 				getDaysEvents(user.getCurrDate(), user.getCurrDate());
 			} else {
 				System.out.println("Unsuccessful add");
@@ -290,10 +280,7 @@ public class MyClient extends Thread {
 	
 	public void receivedFriendRequestResponse(FriendRequestResponse frr) {
 		if (frr.isDidAccept()) {
-			System.out.println("Accepted");
-//			user.setFriends(getFriendList(user));
 			user.addFriend(frr.getAdded());
-			System.out.println("Size: " + user.getFriends().size());
 			mainwindow.displayFriends(user);
 			mainwindow.acceptedFriendRequest(frr.getAdded());
 		} else {
@@ -370,9 +357,6 @@ public class MyClient extends Thread {
 		openMainWindow();
 		getDaysEvents(user.getCurrDate(), user.getCurrDate());
 		mainwindow.displayFriends(user);
-//		getFriendList(user);
-		System.out.println("Friends: " + user.getFriends().size());
-		System.out.println("Friend requests " + user.getFriendRequests().size());
 	}
 	
 	public void logout() {
