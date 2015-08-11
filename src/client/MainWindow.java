@@ -34,7 +34,7 @@ public class MainWindow extends JFrame {
 	JButton addEventButton, logoutButton, previousButton, nextButton, addFriendButton, checkRequestButton;
 	JPanel centerPanel, rightPanel, calPanel, dayPanel, switchDatePanel, monthPanel, leftPanel, infoPanel;
 	JDialog addEventWindow, addFriendWindow;
-	JScrollPane jsp, friendScrollPane;
+	JScrollPane jsp, friendScrollPane, eventScrollPane;
 	GridBagConstraints gbc;
 	JLabel [] hourLabels, eventLabels, weekdayLabels;
 	JLabel [] monthDayLabels;
@@ -53,8 +53,9 @@ public class MainWindow extends JFrame {
 	public MainWindow(MyClient c) {
 		this.c = c;
 		//TODO
-		currDate = c.getCurrDate();
-		//currDate = new MyDate(0, 0, 9, 8, 2015);
+		//currDate = c.getCurrDate();
+		currDate = new MyDate(0, 0, 9, 8, 2015);
+		currUser = new User("a", "a", "a", false);
 		// events
 		
 		monthlyMode = false;
@@ -64,6 +65,7 @@ public class MainWindow extends JFrame {
 		setSize(800, 500);
 		addEventHandlers();
 		displayFriends(currUser);
+		displayImportantEvents();
 	}
 	
 	private void createGUI(){
@@ -123,14 +125,15 @@ public class MainWindow extends JFrame {
 		calPanel.add(jsp, BorderLayout.CENTER);
 		centerPanel.add(calPanel);
 		
-				
 		eventTextArea = new JTextArea();
 		eventTextArea.setRows(10);
 		eventTextArea.setEditable(false);
 		//eventTextArea.setCursor(null);
 		//eventTextArea.setOpaque(false);
 		//eventTextArea.setFocusable(false);
-		centerPanel.add(eventTextArea);
+		eventScrollPane = new JScrollPane(eventTextArea);
+		eventScrollPane.setHorizontalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		centerPanel.add(eventScrollPane);
 		
 		switchDatePanel = new JPanel();
 		previousButton = new JButton("Previous");
@@ -362,6 +365,7 @@ public class MainWindow extends JFrame {
 		calPanel.remove(jsp);
 		calPanel.add(monthPanel);
 		
+		displayImportantEvents();
 		validate();
 		repaint();
 	}
@@ -372,6 +376,8 @@ public class MainWindow extends JFrame {
 		clearEvents();
 		c.getDaysEvents(currDate);
 		calPanel.add(jsp);
+		
+		displayImportantEvents();
 		validate();
 		repaint();
 	}
@@ -405,27 +411,28 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
-//	public void displayImportantEvents (){
-//		eventTextArea.setText("");
-//		Vector<MyEvent> events;
-//		if (dailyRadioButton.isSelected()){
-//			events = c.getEvents(currDate);
-//			for (int i=0; i<events.size();i++){
-//				if (events.get(i).isImportant()){
-//					eventTextArea.append(events.get(i).toString());
-//				}
-//			}
-//		}
-//		else{
-//			for (int i=1; i<daysInMonth; i++){
-//				events = c.getEvents(new MyDate(0, 0, i, currDate.getMonth(), currDate.getYear()));
-//				for (int j=0; j<events.size();j++){
-//					if (events.get(j).isImportant()){
-//						eventTextArea.append(events.get(i).toString());
-//					}
-//			}
-//		}
-//	}
+	public void displayImportantEvents (){
+		eventTextArea.setText("");
+		Vector<MyEvent> events;
+		if (dailyRadioButton.isSelected()){
+			events = c.getEvents(currDate);
+			for (int i=0; i<events.size();i++){
+				if (events.get(i).isImportant()){
+					eventTextArea.append(events.get(i).toString());
+				}
+			}
+		}
+		else{
+			for (int i=1; i<daysInMonth; i++){
+				events = c.getEvents(new MyDate(0, 0, i, currDate.getMonth(), currDate.getYear()));
+				for (int j=0; j<events.size();j++){
+					if (events.get(j).isImportant()){
+						eventTextArea.append(events.get(i).toString());
+					}
+				}
+			}
+		}
+	}
 	
 	
 	public static void main (String[] args){
