@@ -138,7 +138,7 @@ public class MainWindow extends JFrame {
 		//eventTextArea.setFocusable(false);
 		eventScrollPane = new JScrollPane(eventTextArea);
 		eventScrollPane.setHorizontalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		centerPanel.add(eventScrollPane);
+		centerPanel.add(eventTextArea);
 		
 		switchDatePanel = new JPanel();
 		previousButton = new JButton("Previous");

@@ -18,8 +18,6 @@ public class MySQLDriver {
 	static final String DB_NAME = "USERS";
 	
 	//  Database credentials
-	//static final String USER = "root";
-	//static final String PASS = "root";
 	private String mySQLuser;
 	private String mySQLpass;
    

@@ -51,12 +51,11 @@ public class MyServer {
 			sl = new ServerListener(ss, this);
 			sl.start();
 			
+			/*
 			msql = new MySQLDriver();
-			//msql.connect();
 			msql.createDatabase();
 			msql.createTable();
-			//msql.stop();
-			
+			*/
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -100,7 +99,7 @@ public class MyServer {
 			u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
 			userMap.put(u, c);
 			usernameList.add(au.getUsername());
-			sendUser(u); // sends user to database
+			//sendUser(u); // sends user to database
 		} else {
 			u = new User("Guest", "", "Guest", true);
 			u.setGuestIndex(guestIndex);
@@ -117,10 +116,6 @@ public class MyServer {
 			msql.add(u.getUsername(), u.getPassword(), u.getName());
 		}
 		msql.stop();
-		
-		/*if (serverListener != null) {
-			serverListener.sendFactory(factory);
-		}*/
 	}
 	
 	
