@@ -137,8 +137,8 @@ public class MainWindow extends JFrame {
 		//eventTextArea.setOpaque(false);
 		//eventTextArea.setFocusable(false);
 		eventScrollPane = new JScrollPane(eventTextArea);
-		eventScrollPane.setHorizontalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		centerPanel.add(eventTextArea);
+		eventScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		centerPanel.add(eventScrollPane);
 		
 		switchDatePanel = new JPanel();
 		previousButton = new JButton("Previous");
@@ -429,11 +429,11 @@ public class MainWindow extends JFrame {
 			}
 		}
 		else{
-			for (int i=1; i<daysInMonth; i++){
+			for (int i=1; i<=daysInMonth; i++){
 				events = c.getEvents(new MyDate(0, 0, i, currDate.getMonth(), currDate.getYear()));
 				for (int j=0; j<events.size();j++){
 					if (events.get(j).isImportant()){
-						eventTextArea.append(events.get(i).toString());
+						eventTextArea.append(events.get(j).toString());
 					}
 				}
 			}

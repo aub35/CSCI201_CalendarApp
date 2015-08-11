@@ -39,11 +39,11 @@ public class MyEvent implements Serializable {
 	}
 	
 	public String toString(){
-		String str = name + "/n";
-		str += "Start:" + start.toString() + "/n";
-		str += "End:"+ end.toString()+"/n";
-		if (location!=null){
-			str+="@" + location;
+		String str = name + "\n";
+		str += "Start:" + start.toString() + "\n";
+		str += "End:"+ end.toString()+"\n";
+		if (!location.isEmpty()){
+			str+="@" + location+"\n";
 		}
 		return str;
 	}
