@@ -157,8 +157,8 @@ public class MyServer {
 	
 	public void getEvents(GetEvents ge) {
 		User u = ge.getUser();
-		MyDate start = u.getCurrDate();
-		MyDate end = u.getCurrDate();
+		MyDate start = ge.getStart();
+		MyDate end = ge.getEnd();
 		MyCalendar value = null;
 		if (!u.isGuest()) {
 			for (User key : userMap.keySet()) {
@@ -174,10 +174,21 @@ public class MyServer {
 			}
 		}
 		if (value != null) {
+			Vector<MyEvent> events = new Vector<MyEvent>();
+			System.out.println("server got from " + start + " to " + end);
 			if (MyDate.isSameDay(start, end)) {
-				Vector<MyEvent> events = value.getDaysEvent(start);
-				ge.setEvents(events);
+				if (ge.isOnlyImportantEvents()){
+					System.out.println("Ran only got important events");
+					events = value.getDaysEvent(start, true);
+				} else {
+					System.out.println("Ran for unimpotant events too");
+					events = value.getDaysEvent(start, false);
+				}
+			} else {
+				System.out.println("Got Month's events");
+				events = value.getMonthsEvents(start, end);
 			}
+			ge.setEvents(events);
 			ge.setSuccessfulGet(true);
 		} else {
 			System.out.println("Server determined value is null");

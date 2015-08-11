@@ -380,7 +380,7 @@ public class MainWindow extends JFrame {
 		calPanel.remove(monthPanel);
 		
 		clearEvents();
-		c.getDaysEvents(currDate);
+		c.getDaysEvents(currDate, currDate);
 		calPanel.add(jsp);
 		
 		displayImportantEvents();
@@ -421,23 +421,21 @@ public class MainWindow extends JFrame {
 		eventTextArea.setText("");
 		Vector<MyEvent> events;
 		if (dailyRadioButton.isSelected()){
-			events = c.getEvents(currDate);
+			events = c.getEvents(currDate, currDate);
 			for (int i=0; i<events.size();i++){
-				if (events.get(i).isImportant()){
-					eventTextArea.append(events.get(i).toString());
-				}
+				eventTextArea.append(events.get(i).toString());
 			}
 		}
 		else{
-			for (int i=1; i<=daysInMonth; i++){
-				events = c.getEvents(new MyDate(0, 0, i, currDate.getMonth(), currDate.getYear()));
-				for (int j=0; j<events.size();j++){
-					if (events.get(j).isImportant()){
-						eventTextArea.append(events.get(j).toString());
-					}
+			MyDate startDate = new MyDate(0, 0, 1, currDate.getMonth(), currDate.getYear());
+			MyDate endDate = MyDate.getEndOfMonth(startDate);
+			System.out.println("Start date: " + startDate);
+			events = c.getEvents(startDate, endDate);
+			System.out.println("Size: " + events.size());
+			for (int j=0; j<events.size();j++){
+					eventTextArea.append(events.get(j).toString());
 				}
 			}
-		}
 	}
 	
 /*	

@@ -12,7 +12,7 @@ public class GetEvents implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private MyDate start;
 	private MyDate end;
-	private boolean isSuccessfulGet;
+	private boolean isSuccessfulGet, onlyImportantEvents;
 	private Vector<MyEvent> events;
 	private User user;
 	
@@ -28,18 +28,15 @@ public class GetEvents implements Serializable {
 		this.events = events;
 	}
 
-	public GetEvents(MyDate start, MyDate end, User user) {
+	public GetEvents(MyDate start, MyDate end, User user, boolean onlyImportantEvents) {
 		this.start = start;
 		this.end = end;
 		this.user = user;
+		this.onlyImportantEvents = onlyImportantEvents;
 	}
 
 	public MyDate getStart() {
 		return start;
-	}
-
-	public void setStart(MyDate start) {
-		this.start = start;
 	}
 	
 	public MyDate getEnd() {
@@ -52,6 +49,10 @@ public class GetEvents implements Serializable {
 
 	public void setSuccessfulGet(boolean isSuccessfulGet) {
 		this.isSuccessfulGet = isSuccessfulGet;
+	}
+
+	public boolean isOnlyImportantEvents() {
+		return onlyImportantEvents;
 	}
 	
 }

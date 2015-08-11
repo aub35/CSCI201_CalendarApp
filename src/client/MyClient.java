@@ -170,7 +170,7 @@ public class MyClient extends Thread {
 			AddEvent ae = rd.addevent;
 			if (ae.isSuccessfulAdd()) {
 				System.out.println("Successfully added event");
-				getDaysEvents(user.getCurrDate());
+				getDaysEvents(user.getCurrDate(), user.getCurrDate());
 			} else {
 				System.out.println("Unsuccessful add");
 			}
@@ -251,9 +251,9 @@ public class MyClient extends Thread {
 	}
 
 	//get day's events
-	public void getDaysEvents(MyDate date) {
+	public void getDaysEvents(MyDate startDate, MyDate endDate) {
 		try {
-			GetEvents ge2 = new GetEvents(date, date, user);
+			GetEvents ge2 = new GetEvents(startDate, endDate, user, false);
 			outputStream.writeObject(ge2);
 			outputStream.flush();
 			outputStream.reset();
@@ -264,8 +264,12 @@ public class MyClient extends Thread {
 			GetEvents ge = rd.getevents;
 			if (ge.isSuccessfulGet()) {
 				Vector<MyEvent> events = ge.getEvents();
-				for (int i = 0; i < events.size(); i++) {
-					mainwindow.displayEvent(events.get(i));
+				if (!mainwindow.monthlyMode) {
+					for (int i = 0; i < events.size(); i++) {
+						mainwindow.displayEvent(events.get(i));
+					}					
+				} else {
+					
 				}
 			} else {
 				System.out.println("Unsuccessful getting events");
@@ -280,11 +284,12 @@ public class MyClient extends Thread {
 		}
 	}
 	
-	public Vector<MyEvent> getEvents(MyDate date){
+	//gets important events
+	public Vector<MyEvent> getEvents(MyDate startDate, MyDate endDate){
 		Vector<MyEvent> events = null;
 		try {
-			GetEvents ge2 = new GetEvents(date, date, user);
-			outputStream.writeObject(ge2);
+			System.out.println("Runing for " + startDate + " to " + endDate);
+			outputStream.writeObject(new GetEvents(startDate, endDate, user, true));
 			outputStream.flush();
 			outputStream.reset();
 			while (!haveReceivedGetEvents) {
@@ -313,7 +318,7 @@ public class MyClient extends Thread {
 		user.setCurrDate(MyDate.getTodaysDate());
 		closeLoginWindow();
 		openMainWindow();
-		getDaysEvents(user.getCurrDate());
+		getDaysEvents(user.getCurrDate(), user.getCurrDate());
 	}
 	
 	public void logout() {
@@ -329,21 +334,23 @@ public class MyClient extends Thread {
 		user = null;
 	}
 	
+	
+	
 	public void dayClicked(MyDate currentDate) {
 		user.setCurrDate(currentDate);
-		getDaysEvents(user.getCurrDate());
+		getDaysEvents(user.getCurrDate(), user.getCurrDate());
 	}
 	
 	public void nextDay() {
 		MyDate next = MyDate.getNextDay(user.getCurrDate());
 		user.setCurrDate(next);
-		getDaysEvents(user.getCurrDate());
+		getDaysEvents(user.getCurrDate(), user.getCurrDate());
 	}
 	
 	public void previousDay() {
 		MyDate prev = MyDate.getPrevDay(user.getCurrDate());
 		user.setCurrDate(prev);
-		getDaysEvents(user.getCurrDate());
+		getDaysEvents(user.getCurrDate(), user.getCurrDate());
 	}
 	
 	public void quit() {

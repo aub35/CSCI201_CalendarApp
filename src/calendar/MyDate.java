@@ -56,6 +56,21 @@ public class MyDate implements Serializable {
 		}
 		return false;
 	}
+	
+	public static MyDate getEndOfMonth(MyDate currDate) {
+		int month = currDate.getMonth();
+		int day;
+		if (month == 2) {
+			day = 28; 
+		} else if (month == 1 || month == 3 || month == 5 || month == 7 ||
+				month == 8 || month == 10 || month == 12) {
+			day = 31;
+		} else {
+			day = 30;
+		}
+		return new MyDate(currDate.getMinute(), currDate.getHour(), day,
+				currDate.getMonth(), currDate.getYear());
+	}
 		
 	public static MyDate getNextDay(MyDate currDate) {
 		if (MyDate.isEndOfMonth(currDate.getMonth(), currDate.getDayOfMonth())) {

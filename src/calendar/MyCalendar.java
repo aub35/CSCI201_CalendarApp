@@ -35,7 +35,7 @@ public class MyCalendar implements Serializable {
 		return events.size();
 	}
 	
-	public Vector<MyEvent> getDaysEvent(MyDate date) {
+	public Vector<MyEvent> getDaysEvent(MyDate date, boolean importanceMatters) {
 		Vector<MyEvent> result = new Vector<MyEvent>();
 		if (events.size() == 0) {
 			return result;
@@ -45,13 +45,51 @@ public class MyCalendar implements Serializable {
 		MyDate before = events.elementAt(index).getStart();
 		while (dc.compare(before, date) < 0) {
 			index++;
-			System.out.println("Before Iteration: " + index);
 			if (index >= events.size()) { break; }
 			before = events.elementAt(index).getStart();
 		}
 		while (MyDate.isSameDay(before, date)) {
-			System.out.println("Same Day Iteration: " + index);
-			result.add(events.elementAt(index));
+			if (importanceMatters) {
+				if (events.elementAt(index).isImportant()) {
+					result.add(events.elementAt(index));
+				}
+			} else {
+				result.add(events.elementAt(index));				
+			}
+			index++;
+			if (index >= events.size()) { break; }
+			before = events.elementAt(index).getStart();
+		}
+		return result;
+	}
+	
+	public Vector<MyEvent> getMonthsEvents(MyDate start, MyDate end) {
+		Vector<MyEvent> result = new Vector<MyEvent>();
+		if (events.size() == 0) {
+			return result;
+		}
+		int index = 0;
+		DateComp dc = new DateComp();
+		MyDate before = events.elementAt(index).getStart();
+		while (dc.compare(before, start) < 0) {
+			System.out.println("Iteration before: " + index);
+			index++;
+			if (index >= events.size()) { break; }
+			before = events.elementAt(index).getStart();
+		}
+		while (dc.compare(before, end) < 0) {
+			System.out.println("Iteration after: " + index);
+			if (events.elementAt(index).isImportant()) {
+				result.add(events.elementAt(index));
+			}
+			index++;
+			if (index >= events.size()) { break; }
+			before = events.elementAt(index).getStart();
+		}
+		while (MyDate.isSameDay(before,	end)) {
+			if (events.elementAt(index).isImportant()) {
+				result.add(events.elementAt(index));
+			} 
 			index++;
 			if (index >= events.size()) { break; }
 			before = events.elementAt(index).getStart();

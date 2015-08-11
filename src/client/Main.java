@@ -12,15 +12,6 @@ public class Main {
 	
 	public static void main (String[] args) {
 		new ClientPortGUI();
-/*		Main[] m = new Main[3];
-		m[0] = new Main(30);
-		m[1] = new Main(50);
-		m[2] = new Main(10);
-		Arrays.sort(m, new numComp());
-		
-		for (int i = 0; i < 3; i++) {
-			System.out.println(m[i].num);
-		}*/
 	}
 }
 
