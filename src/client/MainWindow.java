@@ -53,9 +53,9 @@ public class MainWindow extends JFrame {
 	public MainWindow(MyClient c) {
 		this.c = c;
 		//TODO
-		//currDate = c.getCurrDate();
-		currDate = new MyDate(0, 0, 9, 8, 2015);
-		currUser = new User("a", "a", "a", false);
+		currDate = c.getCurrDate();
+		//currDate = new MyDate(0, 0, 9, 8, 2015);
+		//currUser = new User("a", "a", "a", false);
 		// events
 		
 		monthlyMode = false;
@@ -66,6 +66,11 @@ public class MainWindow extends JFrame {
 		addEventHandlers();
 		displayFriends(currUser);
 		displayImportantEvents();
+		
+		if (currUser.isGuest()){
+			addFriendButton.setEnabled(false);;
+			checkRequestButton.setEnabled(false);
+		}
 	}
 	
 	private void createGUI(){
@@ -189,6 +194,7 @@ public class MainWindow extends JFrame {
 		leftPanel.add(monthlyRadioButton);
 		
 		add(leftPanel, BorderLayout.WEST);
+		
 	}
 		
 	
@@ -434,7 +440,7 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
-	
+/*	
 	public static void main (String[] args){
 		
 		MyClient c = new MyClient("localhost", 1111);
@@ -443,7 +449,7 @@ public class MainWindow extends JFrame {
 		mainWindow.displayEvent(e);
 		//mainWindow.displayMonth();
 	}
-
+*/
 
 
 }
