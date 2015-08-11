@@ -292,20 +292,24 @@ public class MainWindow extends JFrame {
 		
 		checkRequestButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
-				//TODO get message
-				String request = null;
-				int selection = JOptionPane.showConfirmDialog(MainWindow.this, request, "Message", JOptionPane.YES_NO_OPTION);
-				switch (selection){
-					case JOptionPane.YES_OPTION:
-						
-						break;
-					case JOptionPane.NO_OPTION:
-						
-						break;
-					case JOptionPane.CLOSED_OPTION:
-						
-						break;
+				User u = c.getCurrUser();
+				Vector<User> friendRequests = u.getFriendRequests();
+				if (friendRequests.size() == 0) {
+					JOptionPane.showMessageDialog(MainWindow.this, "No requests", "Friend Request",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					for (int i = 0; i < friendRequests.size(); i++) {
+						int selection = JOptionPane.showConfirmDialog(MainWindow.this, friendRequests.elementAt(i).getUsername() + 
+								" wants to be your friend!", "Friend Request", 
+								JOptionPane.YES_NO_OPTION);
+						if (selection == JOptionPane.YES_OPTION) {
+							c.acceptFriendRequest(friendRequests.elementAt(i));
+						} else if (selection == JOptionPane.NO_OPTION) {
+							c.denyFriendRequest(friendRequests.elementAt(i));
+						}
+					}
 				}
+				
 			}
 		});
 		
@@ -417,7 +421,7 @@ public class MainWindow extends JFrame {
 		friendsTextArea.setText("");
 		Vector<User> friends = u.getFriends();
 		for (int i=0; i<friends.size(); i++){
-			friendsTextArea.append(friends.get(i).getUsername());
+			friendsTextArea.append(friends.get(i).getUsername() + "\n");
 		}
 	}
 	

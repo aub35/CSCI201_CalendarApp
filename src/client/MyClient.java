@@ -239,6 +239,20 @@ public class MyClient extends Thread {
 		}
 	}
 	
+	public void acceptFriendRequest(User adder) {
+		user.addFriend(adder);
+		FriendRequestResponse frr = new FriendRequestResponse(user, adder);
+		frr.setDidAccept(true);
+		mainwindow.displayFriends(user);
+		sendFriendRequestResponse(frr);
+	}
+	
+	public void denyFriendRequest(User adder) {
+		FriendRequestResponse frr = new FriendRequestResponse(user, adder);
+		frr.setDidAccept(false);
+		sendFriendRequestResponse(frr);		
+	}
+	
 	//send friend request
 	private void sendFriendRequest(AddFriend af) {
 		try {
@@ -258,48 +272,6 @@ public class MyClient extends Thread {
 			outputStream.reset();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-	
-	@SuppressWarnings("finally")
-	private Vector<User> getFriendList(User u) {
-		Vector<User> friends = new Vector<User>();
-		try {
-			outputStream.writeObject(new GetFriendList(u));
-			outputStream.flush();
-			outputStream.reset();
-			while (!haveReceivedFriendList) {
-				Thread.sleep(10);
-			}
-			Thread.sleep(10);
-			friends =  rd.getfriendlist.getFriends();
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			rd.getfriendlist = null;
-			haveReceivedFriendList = false;
-			return friends;
-		}
-	}
-	
-	@SuppressWarnings("finally")
-	private Vector<User> getFriendRequests(User u) {
-		Vector<User> friends = new Vector<User>();
-		try {
-			outputStream.writeObject(new GetFriendList(u));
-			outputStream.flush();
-			outputStream.reset();
-			while (!haveReceivedFriendList) {
-				Thread.sleep(10);
-			}
-			Thread.sleep(10);
-			friends =  rd.getfriendlist.getFriendRequests();
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			rd.getfriendlist = null;
-			haveReceivedFriendList = false;
-			return friends;
 		}
 	}
 	
