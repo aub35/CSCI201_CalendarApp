@@ -53,11 +53,11 @@ public class MyServer {
 			sl = new ServerListener(ss, this);
 			sl.start();
 			
-			/*
+			
 			msql = new MySQLDriver();
 			msql.createDatabase();
 			msql.createTable();
-			*/
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -100,7 +100,7 @@ public class MyServer {
 			u = new User(au.getUsername(), au.getPassword(), au.getName(), false);
 			userMap.put(u, c);
 			usernameList.add(au.getUsername());
-			//sendUser(u); // sends user to database
+			sendUser(u); // sends user to database
 		} else {
 			u = new User("Guest", "", "Guest", true);
 			u.setGuestIndex(guestIndex);

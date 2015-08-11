@@ -51,7 +51,6 @@ public class MySQLDriver {
 	public void connect(){	
 		try {
 			con = DriverManager.getConnection(DB_URL, mySQLuser, mySQLpass);
-			//con = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}  
@@ -61,7 +60,6 @@ public class MySQLDriver {
 	public void connectToDB(){	
 		try {
 			con = DriverManager.getConnection(DB_URL+DB_NAME, mySQLuser, mySQLpass);
-			//con = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}  
@@ -82,13 +80,11 @@ public class MySQLDriver {
 		Statement stmt = null;
 	   try{
 		   //Execute a query
-		   System.out.println("Creating database...");
 		   stmt = con.createStatement();
 		   
 		   String sql = "CREATE DATABASE IF NOT EXISTS " + DB_NAME;
 		   
 		   stmt.executeUpdate(sql);
-		   System.out.println("Database created successfully!");
 	   	} catch(SQLException se) {
 	   		se.printStackTrace();
 	   	} catch(Exception e) {
@@ -110,7 +106,6 @@ public class MySQLDriver {
 		Statement stmt = null;
 		try{
 			//Execute a query
-		    System.out.println("Creating table in users database...");
 		    stmt = con.createStatement();
 		    
 		    String sql = "CREATE TABLE IF NOT EXISTS REGISTRATION " +
@@ -120,7 +115,6 @@ public class MySQLDriver {
 	                   " PRIMARY KEY ( username ))"; 
 		    
 		    stmt.executeUpdate(sql);
-		    System.out.println("Table created successfully!");
 	   	} catch(SQLException se) {
 	   		se.printStackTrace();
 	   	} catch(Exception e) {
@@ -163,13 +157,11 @@ public class MySQLDriver {
 			ps.setString(1, username);
 			ResultSet result = ps.executeQuery();
 			while (result.next()) {
-				System.out.println(result.getString(1) + " exists in database table");
 				return true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(username + " not found in database");
 		return false;
 	}
 	
@@ -181,7 +173,6 @@ public class MySQLDriver {
 			ps.setString(2, password);
 			ps.setString(3, name);
 			ps.executeUpdate();
-			System.out.println("Adding " + username + " into table");
 		} catch (SQLException e) {e.printStackTrace();}
 	}
 	
