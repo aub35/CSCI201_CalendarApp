@@ -14,7 +14,9 @@ import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.FriendRequest;
+import resources.FriendRequestResponse;
 import resources.GetEvents;
+import resources.GetFriendList;
 import resources.SearchFriend;
 import trie.MyTrie;
 import calendar.MyCalendar;
@@ -214,6 +216,49 @@ public class MyServer {
 			}
 		}
 	}
+	
+	public void getFriendList(GetFriendList gfl) {
+		User u = gfl.getU();
+		for (User key : userMap.keySet()) {
+			if (User.isEqual(key, u)) {
+				gfl.setFriends(key.getFriends());
+				gfl.setFriendRequests(key.getFriendRequests());
+				gfl.setSuccessfulGet(true);
+			}
+		}
+		System.out.println("Exiting getFriendList");
+	}
+	
+	public void sendFriendRequestResponse(FriendRequestResponse frr) {
+		User adder = frr.getAdder();
+		User added = frr.getAdded();
+		System.out.println("Is adder null " + adder);
+		for (User key : userMap.keySet()) {
+			if (key == null) {
+				System.out.println("Key is null");
+			}
+			if (User.isEqual(key, adder)) {
+				if (frr.isDidAccept()) {	
+					key.addFriend(added);
+					System.out.println(adder.getUsername() + " added friend");
+				}
+			} else if (User.isEqual(key, added)) {
+				if (frr.isDidAccept()){
+					key.addFriend(adder);					
+					System.out.println(added.getUsername() + " added friend");
+				}
+				key.removeFriendRequest(adder);
+				System.out.println(added.getUsername() + " removed request");
+
+			}
+		}
+		for (User key : connections.keySet()) {
+			if (User.isEqual(key, adder)) {
+				ServerClientListener scl = connections.get(key);
+				scl.sendBackFriendRequestResponse(frr);
+			}
+		}
+	}
 		
 	public void sendFriendRequest(FriendRequest fr){
 		User requestedUser = fr.getRequestedUser();
@@ -236,7 +281,6 @@ public class MyServer {
 			for (User key : connections.keySet()) {
 				if (User.isEqual(key, u)) {
 					connections.remove(key);
-					System.out.println("Removed + " + u.getUsername());
 				}
 			}
 		}

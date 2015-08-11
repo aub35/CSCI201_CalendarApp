@@ -8,7 +8,9 @@ import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.FriendRequest;
+import resources.FriendRequestResponse;
 import resources.GetEvents;
+import resources.GetFriendList;
 import resources.SearchFriend;
 
 public class ReceiveData extends Thread {
@@ -24,6 +26,8 @@ public class ReceiveData extends Thread {
 	SearchFriend searchfriend;
 	AddFriend addfriend;
 	FriendRequest friendrequest;
+	GetFriendList getfriendlist;
+	FriendRequestResponse friendrequestresponse;
 	
 	ReceiveData(ObjectInputStream inputStream, MyClient client) {
 		this.inputStream = inputStream;
@@ -52,6 +56,8 @@ public class ReceiveData extends Thread {
 				ifSearchFriend(obj);
 				ifAddFriend(obj);
 				ifFriendRequest(obj);
+				ifFriendRequestResponse(obj);
+				ifGetFriendList(obj);
 				
 				if (isQuit) { break; }
 				Thread.sleep(10);
@@ -106,7 +112,22 @@ public class ReceiveData extends Thread {
 	private void ifFriendRequest(Object obj) {
 		if (obj instanceof FriendRequest) {
 			friendrequest = (FriendRequest)obj;
-			client.setHaveReceivedFriendRequestConfirmation(true);
+			client.receivedFriendRequest(friendrequest);
+		}
+	}
+	
+	private void ifGetFriendList(Object obj) {
+		if (obj instanceof GetFriendList) {
+			System.out.println("Got friends list");
+			getfriendlist = (GetFriendList)obj;
+			client.setHaveReceivedFriendList(true);
+		}
+	}
+	
+	private void ifFriendRequestResponse(Object obj) {
+		if (obj instanceof FriendRequestResponse) {
+			friendrequestresponse = (FriendRequestResponse)obj;
+			client.receivedFriendRequestResponse(friendrequestresponse);
 		}
 	}
 	

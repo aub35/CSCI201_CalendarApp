@@ -10,7 +10,9 @@ import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.FriendRequest;
+import resources.FriendRequestResponse;
 import resources.GetEvents;
+import resources.GetFriendList;
 import resources.SearchFriend;
 
 public class ServerClientListener extends Thread {
@@ -111,6 +113,27 @@ public class ServerClientListener extends Thread {
 	public void sendBackFriendRequest(FriendRequest fr) {
 		try {
 			outputStream.writeObject(fr);
+			outputStream.flush();
+			outputStream.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendBackGetFriendList(GetFriendList gfl) {
+		try {
+			outputStream.writeObject(gfl);
+			outputStream.flush();
+			outputStream.reset();
+			System.out.println("Scl sent back friend list");
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendBackFriendRequestResponse(FriendRequestResponse frr) {
+		try {
+			outputStream.writeObject(frr);
 			outputStream.flush();
 			outputStream.reset();
 		} catch (IOException e) {

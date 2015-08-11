@@ -51,6 +51,14 @@ public class User implements Serializable {
 		friends.add(u);
 	}
 	
+	public void removeFriendRequest(User u) {
+		for (int i = 0; i < friendRequests.size(); i++) {
+			if (User.isEqual(u, friendRequests.elementAt(i))) {
+				friendRequests.remove(i);
+			}
+		}
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -85,5 +93,9 @@ public class User implements Serializable {
 	
 	public void addFriendRequest(User u) {
 		friendRequests.add(u);
+	}
+
+	public void setFriends(Vector<User> friends) {
+		this.friends = friends;
 	}
 }

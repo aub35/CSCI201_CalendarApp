@@ -8,7 +8,9 @@ import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.FriendRequest;
+import resources.FriendRequestResponse;
 import resources.GetEvents;
+import resources.GetFriendList;
 import resources.SearchFriend;
 
 public class ReceiveData extends Thread {
@@ -37,6 +39,9 @@ public class ReceiveData extends Thread {
 				ifSearchFriend(obj);
 				ifAddFriend(obj);
 				ifFriendRequest(obj);
+				ifFriendRequestResponse(obj);
+				ifGetFriendList(obj);
+//				ifUserFriendRequest(obj);
 				ifQuitUser(obj);
 				
 			} catch (IOException | ClassNotFoundException e) {
@@ -114,7 +119,22 @@ public class ReceiveData extends Thread {
 		if (obj instanceof FriendRequest) {
 			FriendRequest fr = (FriendRequest)obj;
 			server.sendFriendRequest(fr);
-			scl.sendBackFriendRequest(fr);
+		}
+	}
+	
+	private void ifFriendRequestResponse(Object obj) {
+		if (obj instanceof FriendRequestResponse) {
+			FriendRequestResponse frr = (FriendRequestResponse)obj;
+			server.sendFriendRequestResponse(frr);
+		}
+	}
+	
+	private void ifGetFriendList(Object obj) {
+		if (obj instanceof GetFriendList) {
+			GetFriendList gfl = (GetFriendList)obj;
+			server.getFriendList(gfl);
+			scl.sendBackGetFriendList(gfl);
+			System.out.println("Server sent back friend list");
 		}
 	}
 }

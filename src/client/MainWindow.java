@@ -393,13 +393,29 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void displaySentFriendRequest() {
-		JOptionPane.showConfirmDialog(MainWindow.this, "Sent Friend Request", "Friend Request",
+		JOptionPane.showMessageDialog(MainWindow.this, "Sent Friend Request", "Friend Request",
 				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public int confirmFriendRequest(User adder) {
+		return JOptionPane.showConfirmDialog(MainWindow.this, "Accept Friend request from " + adder.getUsername() + " ? ",
+				"Friend Request", JOptionPane.YES_NO_OPTION); 
+	}
+	
+	public void deniedFriendRequest(User added) {
+		JOptionPane.showMessageDialog(MainWindow.this, added.getUsername() + " denied your request!", 
+	"Friend Request", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void acceptedFriendRequest(User added) {
+		JOptionPane.showMessageDialog(MainWindow.this, added.getUsername() + " accepted your request!", 
+	"Friend Request", JOptionPane.INFORMATION_MESSAGE);
+		
 	}
 	
 	public void displayFriends(User u){
 		friendsTextArea.setText("");
-		Vector<User> friends = currUser.getFriends();
+		Vector<User> friends = u.getFriends();
 		for (int i=0; i<friends.size(); i++){
 			friendsTextArea.append(friends.get(i).getUsername());
 		}
@@ -434,9 +450,7 @@ public class MainWindow extends JFrame {
 
 			MyDate startDate = new MyDate(0, 0, 1, currDate.getMonth(), currDate.getYear());
 			MyDate endDate = MyDate.getEndOfMonth(startDate);
-			System.out.println("Start date: " + startDate);
 			events = c.getEvents(startDate, endDate);
-			System.out.println("Size: " + events.size());
 			for (int j=0; j<events.size();j++){
 					eventTextArea.append(events.get(j).toString());
 

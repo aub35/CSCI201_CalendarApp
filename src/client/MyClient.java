@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import calendar.MyDate;
 import calendar.MyEvent;
 import calendar.User;
@@ -14,7 +16,9 @@ import resources.AddFriend;
 import resources.AddUser;
 import resources.CheckUser;
 import resources.FriendRequest;
+import resources.FriendRequestResponse;
 import resources.GetEvents;
+import resources.GetFriendList;
 import resources.SearchFriend;
 
 //protocol should be to send username, password & check if there is a matching one in server database
@@ -33,8 +37,9 @@ public class MyClient extends Thread {
 
 	private boolean isGuest;
 	private boolean haveReceivedLogin, haveReceivedUser, haveReceivedAddEvent,
-	haveReceivedGetEvents, haveReceivedSearchFriend, haveReceivedAddFriend,
-	haveReceivedFriendRequestConfirmation = false;
+	haveReceivedGetEvents, haveReceivedSearchFriend, haveReceivedAddFriend, 
+	haveReceivedFriendList = false;
+
 	private User user;
 	
 	//constructor
@@ -50,6 +55,10 @@ public class MyClient extends Thread {
 	}
 	
 	//private variable setters
+	public void setHaveReceivedFriendList(boolean haveReceivedFriendList) {
+		this.haveReceivedFriendList = haveReceivedFriendList;
+	}
+	
 	public void setHaveReceivedLogin(boolean haveReceivedLogin) {
 		this.haveReceivedLogin = haveReceivedLogin;
 	}
@@ -64,10 +73,6 @@ public class MyClient extends Thread {
 	
 	public void setHaveReceivedGetEvents(boolean haveReceivedGetEvents) {
 		this.haveReceivedGetEvents = haveReceivedGetEvents;
-	}
-	
-	public void setHaveReceivedFriendRequestConfirmation(boolean haveReceivedFriendRequestConfirmation) {
-		this.haveReceivedFriendRequestConfirmation = haveReceivedFriendRequestConfirmation;
 	}
 
 	public void setIsGuest(boolean isGuest) {
@@ -239,17 +244,91 @@ public class MyClient extends Thread {
 		try {
 			outputStream.writeObject(new FriendRequest(af.getAdder(), af.getRequestedUser()));
 			outputStream.flush();
-			outputStream.close();
-			while (!haveReceivedFriendRequestConfirmation) {
-				Thread.sleep(10);;
-			} 
-			Thread.sleep(10);
-			
-		} catch (IOException | InterruptedException e) {
+			outputStream.reset();
+			mainwindow.displaySentFriendRequest();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	private void sendFriendRequestResponse(FriendRequestResponse frr) {
+		try {
+			outputStream.writeObject(frr);
+			outputStream.flush();
+			outputStream.reset();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("finally")
+	private Vector<User> getFriendList(User u) {
+		Vector<User> friends = new Vector<User>();
+		try {
+			outputStream.writeObject(new GetFriendList(u));
+			outputStream.flush();
+			outputStream.reset();
+			while (!haveReceivedFriendList) {
+				Thread.sleep(10);
+			}
+			Thread.sleep(10);
+			friends =  rd.getfriendlist.getFriends();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			rd.getfriendlist = null;
+			haveReceivedFriendList = false;
+			return friends;
+		}
+	}
+	
+	@SuppressWarnings("finally")
+	private Vector<User> getFriendRequests(User u) {
+		Vector<User> friends = new Vector<User>();
+		try {
+			outputStream.writeObject(new GetFriendList(u));
+			outputStream.flush();
+			outputStream.reset();
+			while (!haveReceivedFriendList) {
+				Thread.sleep(10);
+			}
+			Thread.sleep(10);
+			friends =  rd.getfriendlist.getFriendRequests();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			rd.getfriendlist = null;
+			haveReceivedFriendList = false;
+			return friends;
+		}
+	}
+	
+	public void receivedFriendRequest(FriendRequest fr) {
+		int selection = mainwindow.confirmFriendRequest(fr.getAdder());
+		FriendRequestResponse frr = new FriendRequestResponse(user, fr.getAdder());
+		if (selection == JOptionPane.YES_OPTION) {
+			frr.setDidAccept(true);
+			user.addFriend(frr.getAdder());
+			mainwindow.displayFriends(user);
+		} else if (selection == JOptionPane.NO_OPTION) {
+			frr.setDidAccept(false);
+		}
+		sendFriendRequestResponse(frr);
+	}
+	
+	public void receivedFriendRequestResponse(FriendRequestResponse frr) {
+		if (frr.isDidAccept()) {
+			System.out.println("Accepted");
+//			user.setFriends(getFriendList(user));
+			user.addFriend(frr.getAdded());
+			System.out.println("Size: " + user.getFriends().size());
+			mainwindow.displayFriends(user);
+			mainwindow.acceptedFriendRequest(frr.getAdded());
+		} else {
+			mainwindow.deniedFriendRequest(frr.getAdded());
+		}
+	}
+	
 	//get day's events
 	public void getDaysEvents(MyDate startDate, MyDate endDate) {
 		try {
@@ -288,7 +367,6 @@ public class MyClient extends Thread {
 	public Vector<MyEvent> getEvents(MyDate startDate, MyDate endDate){
 		Vector<MyEvent> events = null;
 		try {
-			System.out.println("Runing for " + startDate + " to " + endDate);
 			outputStream.writeObject(new GetEvents(startDate, endDate, user, true));
 			outputStream.flush();
 			outputStream.reset();
@@ -319,16 +397,21 @@ public class MyClient extends Thread {
 		closeLoginWindow();
 		openMainWindow();
 		getDaysEvents(user.getCurrDate(), user.getCurrDate());
+		mainwindow.displayFriends(user);
+//		getFriendList(user);
+		System.out.println("Friends: " + user.getFriends().size());
+		System.out.println("Friend requests " + user.getFriendRequests().size());
 	}
 	
 	public void logout() {
 		closeMainWindow();
 		openLoginWindow();
 		try {
+			Thread.sleep(500);
 			outputStream.writeObject(user);
 			outputStream.flush();
 			outputStream.reset();
-		} catch(IOException ie) {
+		} catch(IOException | InterruptedException ie) {
 			ie.printStackTrace();
 		}
 		user = null;
@@ -356,7 +439,7 @@ public class MyClient extends Thread {
 	public void quit() {
 		try {
 			rd.setQuit(true);
-			Thread.sleep(20);
+			Thread.sleep(100);
 			s.close();
 		} catch (IOException | InterruptedException ie) {
 			ie.printStackTrace();
